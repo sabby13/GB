@@ -2,7 +2,11 @@
 
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+
+// Runs before paint on the client (avoids a loader flash), no-op on the server.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import Loader from "./Loader";
 import SiteLogo from "./SiteLogo";
 import { EASE } from "@/lib/motion";
@@ -42,10 +46,15 @@ export default function HeroExperience() {
     setCount(window.innerWidth < 768 ? 9 : 16);
   }, []);
 
-  useEffect(() => {
-    if (reduced) {
+  useIsoLayoutEffect(() => {
+    // Only play the opening sequence when the page loads at the very top of the
+    // landing page. On a reload while scrolled down (or reduced motion), skip
+    // straight to the finished state — no loader, no butterflies.
+    const atTop = window.scrollY <= 40;
+    if (reduced || !atTop) {
       setPhase("done");
       setTitleShown(true);
+      setScrollReady(true);
       return;
     }
     const t1 = window.setTimeout(() => setPhase("burst"), LOAD_MS);
