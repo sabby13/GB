@@ -5,7 +5,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 export const metadata: Metadata = {
   title: "GlassButterfly",
   description: "Let something beautiful live on your screen.",
-  icons: { icon: "/assets/logo.png" },
+  icons: { icon: "/assets/favicon.png" },
 };
 
 export default function RootLayout({

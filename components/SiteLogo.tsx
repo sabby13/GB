@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // Height of the fixed off-white header strip.
 const HEADER_H = 84;
 // Hero (centred) size relative to the docked size (keeps the big reveal).
-const HERO_SCALE = 2.5;
+const HERO_SCALE = 2.15;
 
 /**
  * The GlassButterfly wordmark plus the persistent header.
