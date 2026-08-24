@@ -4,7 +4,9 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
 // Height of the fixed off-white header strip.
-const HEADER_H = 92;
+const HEADER_H = 84;
+// Hero (centred) size relative to the docked size (keeps the big reveal).
+const HERO_SCALE = 2.5;
 
 /**
  * The GlassButterfly wordmark plus the persistent header.
@@ -12,8 +14,8 @@ const HEADER_H = 92;
  * - A fixed off-white strip sits at the very top of the page throughout the
  *   whole site. It's invisible over the cream hero and fades in as you scroll.
  * - The wordmark is revealed large and centred during the hero, then
- *   interpolates smoothly up and down in scale until it docks into the strip,
- *   where it stays as the site header.
+ *   interpolates smoothly up and shrinks to its docked size — which matches the
+ *   section headings (~88px) — where it stays as the site header.
  */
 export default function SiteLogo({ revealed }: { revealed: boolean }) {
   const [vh, setVh] = useState(900);
@@ -27,11 +29,11 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
   }, []);
 
   // Over the first viewport of scroll: rise from centre to the header strip,
-  // shrinking from a large hero size down to the docked header size.
+  // scaling from the large hero size down to the docked (header) size of 1.
   const rawY = useTransform(scrollY, [0, vh * 0.9], [0, -(vh / 2 - HEADER_H / 2)], {
     clamp: true,
   });
-  const rawScale = useTransform(scrollY, [0, vh * 0.9], [1, 0.22], {
+  const rawScale = useTransform(scrollY, [0, vh * 0.9], [HERO_SCALE, 1], {
     clamp: true,
   });
   const y = useSpring(rawY, { stiffness: 120, damping: 26, mass: 0.6 });
@@ -42,7 +44,7 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
 
   return (
     <>
-      {/* Persistent off-white header strip */}
+      {/* Persistent off-white header strip (no divider line) */}
       <motion.div
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-30 w-full"
@@ -50,11 +52,10 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
           height: HEADER_H,
           background: "var(--cream)",
           opacity: stripOpacity,
-          borderBottom: "1px solid rgba(8,8,8,0.06)",
         }}
       />
 
-      {/* Interpolating wordmark (docks into the strip) */}
+      {/* Interpolating wordmark (docks into the strip at header size) */}
       <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center">
         <motion.div
           style={{ y, scale }}
@@ -66,7 +67,8 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
           className="select-none whitespace-nowrap"
         >
-          <span className="wordmark text-[clamp(2.8rem,11vw,9.5rem)] leading-none text-ink">
+          {/* Same size as the "Installation" / "Download" headings */}
+          <span className="wordmark text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink">
             GlassButterfly
             <sup className="ml-1 align-super text-[0.28em] tracking-normal">®</sup>
           </span>

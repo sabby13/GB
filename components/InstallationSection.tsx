@@ -87,7 +87,7 @@ export default function InstallationSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.6 }}
-        className="mx-auto mb-24 max-w-5xl font-display text-[clamp(2.6rem,8vw,5.5rem)] leading-none text-ink"
+        className="mx-auto mb-24 max-w-5xl font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
       >
         Installation
       </motion.h2>

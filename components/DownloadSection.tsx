@@ -18,7 +18,7 @@ export default function DownloadSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.6 }}
-          className="mb-20 font-display text-[clamp(2.6rem,8vw,5.5rem)] leading-none text-ink"
+          className="mb-20 font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
         >
           Download
         </motion.h2>
