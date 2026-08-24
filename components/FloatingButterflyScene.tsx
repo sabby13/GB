@@ -65,9 +65,11 @@ function Flyer({ onDone }: { onDone: () => void }) {
     g.position.y = params.baseY + Math.sin(el * 1.6) * 0.9;
     g.position.z = 0;
     g.scale.setScalar(norm * params.scale);
-    g.rotation.z = Math.sin(el * 2) * 0.2;
-    g.rotation.y = params.dir > 0 ? -1.4 : 1.4;
-    g.rotation.x = -0.2 + Math.sin(el * 5) * 0.1;
+    // Face the wings toward the viewer (dorsal view) rather than side-on, with a
+    // gentle bank/flap so it still reads as flying.
+    g.rotation.z = Math.sin(el * 2) * 0.15;
+    g.rotation.y = (params.dir > 0 ? -0.15 : 0.15) + Math.sin(el * 1.3) * 0.08;
+    g.rotation.x = -0.12 + Math.sin(el * 5) * 0.14;
   });
 
   return (
