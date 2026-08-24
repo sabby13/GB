@@ -78,15 +78,36 @@ body {
   border-radius: 999px;
 }
 
-/* Dotted rotating loader ring */
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+/* Stationary loader ring whose segments illuminate in sequence */
+.loader-seg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 15px;
+  border-radius: 2px;
+  background: var(--ink);
+  opacity: 0.14;
+  transform-origin: center;
+  animation-name: loader-trail;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: opacity;
 }
 
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
+@keyframes loader-trail {
+  0% {
+    opacity: 0.14;
+  }
+  4% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.14;
+  }
+  100% {
+    opacity: 0.14;
+  }
 }
 
 /* Hide scrollbar chrome for a cleaner canvas feel while keeping scroll */
@@ -99,7 +120,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-spin-slow {
+  .loader-seg {
     animation: none;
+    opacity: 0.3;
   }
 }

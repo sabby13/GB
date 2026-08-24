@@ -3,9 +3,16 @@
 import { motion } from "framer-motion";
 import { EASE } from "@/lib/motion";
 
+// The ring stays perfectly still; these segments illuminate one after another
+// around the circle to read as a progress sweep.
+const SEGMENTS = 44;
+const RADIUS = 112; // px from centre of the 240px box
+const CYCLE = 1.6; // seconds for one full loop of the sweep
+
 /**
- * The initial loading indicator: a slowly rotating dotted ring on the
- * cream background. It fades out as the butterfly swarm bursts.
+ * The initial loading indicator: a stationary dashed ring whose individual
+ * segments light up sequentially around the path (a travelling progress sweep),
+ * looping until the assets are ready. It fades out as the butterflies burst.
  */
 export default function Loader({ visible }: { visible: boolean }) {
   return (
@@ -17,12 +24,21 @@ export default function Loader({ visible }: { visible: boolean }) {
       aria-hidden={!visible}
     >
       <div className="relative h-[240px] w-[240px]">
-        <div
-          className="animate-spin-slow absolute inset-0 rounded-full"
-          style={{
-            border: "2px dashed rgba(8,8,8,0.85)",
-          }}
-        />
+        {Array.from({ length: SEGMENTS }).map((_, i) => {
+          const angle = (i / SEGMENTS) * 360;
+          return (
+            <span
+              key={i}
+              className="loader-seg"
+              style={{
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${RADIUS}px)`,
+                // negative, staggered delay makes the lit band travel around
+                animationDelay: `${-(i / SEGMENTS) * CYCLE}s`,
+                animationDuration: `${CYCLE}s`,
+              }}
+            />
+          );
+        })}
       </div>
     </motion.div>
   );

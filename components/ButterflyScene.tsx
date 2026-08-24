@@ -141,9 +141,11 @@ function Swarm({ count, burstStart }: { count: number; burstStart: number | null
             Math.sin(ang) * radius,
             (Math.random() - 0.5) * 2.5
           ),
-          delay: Math.random() * 0.55,
-          duration: 1.4 + Math.random() * 0.9,
-          scale: 0.55 + Math.random() * 0.8,
+          delay: Math.random() * 0.6,
+          // longer flight so butterflies stay ~4s before leaving
+          duration: 2.6 + Math.random() * 1.2,
+          // ~2x larger than before
+          scale: 1.1 + Math.random() * 1.6,
           spin: Math.random() * Math.PI * 2,
           clipIndex: i,
         };
