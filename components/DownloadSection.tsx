@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { EASE, riseIn, stagger, wordReveal } from "@/lib/motion";
+import { EASE, stagger, wordReveal } from "@/lib/motion";
 
 // Set this to your installer URL (e.g. a GitHub release asset) when ready.
 const DOWNLOAD_URL = "";
@@ -13,16 +13,6 @@ export default function DownloadSection() {
   return (
     <section className="relative w-full bg-white px-6 py-40">
       <div className="mx-auto max-w-5xl">
-        <motion.h2
-          variants={riseIn}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
-          className="mb-20 font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
-        >
-          Download
-        </motion.h2>
-
         {/* Word-by-word quote reveal (not a single fade) */}
         <motion.p
           variants={stagger(0.09)}
@@ -48,7 +38,7 @@ export default function DownloadSection() {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 1, ease: EASE.expo }}
-          className="mx-auto w-full max-w-[420px] rounded-[28px] bg-white p-10 text-center"
+          className="mx-auto w-full max-w-[420px] rounded-[28px] bg-white px-10 pb-10 pt-5 text-center"
           style={{ boxShadow: "0 30px 80px -30px rgba(0,0,0,0.35)" }}
         >
           {/* App icon (your logo.png) */}
