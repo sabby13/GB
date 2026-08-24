@@ -80,13 +80,13 @@ body {
 
 /* Stationary dashed circle whose arc draws on from the right (3 o'clock) */
 .loader-svg {
-  /* flip vertically so the arc grows up over the top from the right,
-     matching the reference; the circle stays perfectly stationary */
-  transform: scaleY(-1);
+  /* rotate so the draw starts at 12 o'clock and proceeds clockwise
+     (12 -> 3 -> 6 -> 9 -> 12); the circle itself stays stationary */
+  transform: rotate(-90deg);
 }
 
 .loader-reveal {
-  animation: loader-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation: loader-draw 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
   will-change: stroke-dashoffset;
 }
 
@@ -94,7 +94,7 @@ body {
   0% {
     stroke-dashoffset: 679; /* circumference — nothing revealed */
   }
-  72% {
+  82% {
     stroke-dashoffset: 0; /* full circle revealed */
   }
   100% {

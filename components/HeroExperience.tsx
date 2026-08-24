@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import SiteLogo from "./SiteLogo";
@@ -16,22 +16,27 @@ const ButterflyScene = dynamic(() => import("./ButterflyScene"), {
 type Phase = "loading" | "burst" | "done";
 
 // Sequence timing (ms)
-const LOAD_MS = 2000; // loader sweep
+const LOAD_MS = 2400; // loader draws a full circle (slower)
 const BURST_MS = 4200; // butterflies stay ~4s before flying off
-const SCROLL_DELAY_MS = 1000; // pause after logo revealed, then fade in "scroll"
+const SCROLL_DELAY_MS = 2000; // after butterflies + logo, then fade in "scroll"
 
 /**
- * Orchestrates the opening sequence:
- *   loading -> segmented ring sweeps (~2s while assets init)
- *   burst   -> ring bursts into ~2x butterflies that reveal the logo (~4s)
- *   done    -> butterflies have flown off; canvas unmounts, logo stays.
- * Then, 1s after the reveal completes, the "scroll" hint fades in.
+ * Orchestrates the opening sequence in strict order:
+ *   loading -> the dashed circle draws on clockwise (~2.4s)
+ *   burst   -> the ring bursts into butterflies that fly off (~4s)
+ *   done    -> the GlassButterfly title fades in
+ * Then, ~1s later, the "scroll" hint fades in — and it fades back out as soon
+ * as the user starts scrolling.
  */
 export default function HeroExperience() {
   const reduced = usePrefersReducedMotion();
   const [phase, setPhase] = useState<Phase>("loading");
   const [count, setCount] = useState(16);
   const [scrollReady, setScrollReady] = useState(false);
+
+  const { scrollY } = useScroll();
+  // Fade the scroll hint out as soon as scrolling begins.
+  const scrollFade = useTransform(scrollY, [0, 140], [1, 0], { clamp: true });
 
   // Slightly fewer butterflies on small screens for performance.
   useEffect(() => {
@@ -53,7 +58,7 @@ export default function HeroExperience() {
     return () => window.clearTimeout(t2);
   }, [phase]);
 
-  // Once the reveal is complete (logo fully shown), wait, then reveal "scroll".
+  // Once the title has appeared, wait, then reveal the "scroll" hint.
   useEffect(() => {
     if (phase !== "done") return;
     const t3 = window.setTimeout(() => setScrollReady(true), SCROLL_DELAY_MS);
@@ -67,26 +72,29 @@ export default function HeroExperience() {
       {/* Loader ring */}
       {!reduced && <Loader visible={phase === "loading"} />}
 
-      {/* Butterfly swarm canvas (revealed by bursting) */}
+      {/* Butterfly swarm canvas */}
       {showCanvas && (
         <div className="absolute inset-0 z-20">
           <ButterflyScene active={phase !== "loading"} count={count} />
         </div>
       )}
 
-      {/* The wordmark, revealed beneath the butterflies */}
-      <SiteLogo revealed={reduced || phase !== "loading"} />
+      {/* The GlassButterfly title — appears only after the butterflies */}
+      <SiteLogo revealed={reduced || phase === "done"} />
 
-      {/* Scroll hint — only after the logo is fully revealed */}
+      {/* Scroll hint — appears after the title, fades out on scroll */}
       <motion.div
         className="pointer-events-none absolute bottom-10 left-1/2 z-10 -translate-x-1/2"
         initial={{ opacity: 0 }}
         animate={{ opacity: scrollReady ? 1 : 0 }}
         transition={{ duration: 0.9, ease: EASE.smooth }}
       >
-        <span className="text-[11px] uppercase tracking-[0.35em] text-ink/40">
+        <motion.span
+          style={{ opacity: scrollFade }}
+          className="block text-[11px] uppercase tracking-[0.35em] text-ink/40"
+        >
           scroll
-        </span>
+        </motion.span>
       </motion.div>
     </section>
   );
