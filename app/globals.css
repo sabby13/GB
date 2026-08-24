@@ -78,35 +78,27 @@ body {
   border-radius: 999px;
 }
 
-/* Stationary loader ring whose segments illuminate in sequence */
-.loader-seg {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 3px;
-  height: 15px;
-  border-radius: 2px;
-  background: var(--ink);
-  opacity: 0.14;
-  transform-origin: center;
-  animation-name: loader-trail;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: opacity;
+/* Stationary dashed circle whose arc draws on from the right (3 o'clock) */
+.loader-svg {
+  /* flip vertically so the arc grows up over the top from the right,
+     matching the reference; the circle stays perfectly stationary */
+  transform: scaleY(-1);
 }
 
-@keyframes loader-trail {
+.loader-reveal {
+  animation: loader-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: stroke-dashoffset;
+}
+
+@keyframes loader-draw {
   0% {
-    opacity: 0.14;
+    stroke-dashoffset: 679; /* circumference — nothing revealed */
   }
-  4% {
-    opacity: 1;
-  }
-  18% {
-    opacity: 0.14;
+  72% {
+    stroke-dashoffset: 0; /* full circle revealed */
   }
   100% {
-    opacity: 0.14;
+    stroke-dashoffset: 0; /* brief hold on the complete circle, then loop */
   }
 }
 
@@ -120,8 +112,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader-seg {
+  .loader-reveal {
     animation: none;
-    opacity: 0.3;
+    stroke-dashoffset: 0; /* show the complete dashed circle, static */
   }
 }
