@@ -53,9 +53,9 @@ export default function DownloadSection() {
         >
           {/* App icon (your logo.png) */}
           <img
-            src="/assets/logo.png"
+            src="/assets/app-icon.png"
             alt="GlassButterfly app icon"
-            className="mx-auto mb-6 h-72 w-72 object-contain"
+            className="mx-auto mb-6 block h-auto w-full object-contain"
             draggable={false}
           />
 
