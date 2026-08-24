@@ -25,27 +25,27 @@ export type Wallpaper = {
 
 export const WALLPAPERS: Wallpaper[] = [
   {
-    id: "aurora",
-    title: "Aurora",
-    src: "/assets/wallpapers/aurora.mp4",
+    id: "her",
+    title: "HER",
+    src: "/assets/wallpapers/her.mp4",
     gradient: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
   },
   {
-    id: "monarch",
-    title: "Monarch",
-    src: "/assets/wallpapers/monarch.mp4",
+    id: "rome",
+    title: "ROME",
+    src: "/assets/wallpapers/rome.mp4",
     gradient: "linear-gradient(135deg, #3a1c1c 0%, #7a3b16 55%, #e08a2b 100%)",
   },
   {
-    id: "glass",
-    title: "Glass",
-    src: "/assets/wallpapers/glass.mp4",
+    id: "uwu",
+    title: "UWU",
+    src: "/assets/wallpapers/uwu.mp4",
     gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
   },
   {
-    id: "bloom",
-    title: "Bloom",
-    src: "/assets/wallpapers/bloom.mp4",
+    id: "custom",
+    title: "CUSTOM",
+    src: "/assets/wallpapers/custom.mp4",
     gradient: "linear-gradient(135deg, #232526 0%, #414345 100%)",
   },
 ];

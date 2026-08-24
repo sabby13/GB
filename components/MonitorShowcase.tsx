@@ -28,9 +28,9 @@ export default function MonitorShowcase() {
         transition={{ duration: 1.2, ease: EASE.expo }}
         className="relative w-full max-w-[880px]"
       >
-        {/* Monitor body */}
+        {/* Monitor body (sits in front of the stand) */}
         <div
-          className="relative rounded-[22px] p-[14px]"
+          className="relative z-10 rounded-[22px] p-[14px]"
           style={{
             background:
               "linear-gradient(180deg, #f4f4f5 0%, #e6e6e9 55%, #cfcfd4 100%)",
@@ -61,8 +61,8 @@ export default function MonitorShowcase() {
           <div className="mx-auto mt-[6px] h-1 w-1 rounded-full bg-black/30" />
         </div>
 
-        {/* Stand */}
-        <div className="relative mx-auto -mt-1 flex flex-col items-center">
+        {/* Stand (tucked behind the screen) */}
+        <div className="relative z-0 mx-auto -mt-3 flex flex-col items-center">
           <div
             className="h-16 w-24"
             style={{
