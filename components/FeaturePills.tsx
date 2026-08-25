@@ -1,9 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { pillIn, stagger } from "@/lib/motion";
-import FloatingButterfly from "./FloatingButterfly";
 
 const FEATURES: { label: string; align: "start" | "center" | "end"; offset: string }[] = [
   { label: "Built to stay light", align: "center", offset: "0" },
@@ -17,15 +15,8 @@ const FEATURES: { label: string; align: "start" | "center" | "end"; offset: stri
  * section scrolls into view.
  */
 export default function FeaturePills() {
-  const sectionRef = useRef<HTMLElement>(null);
-  // The butterfly fly-by is active only while this section is in view.
-  const inView = useInView(sectionRef, { amount: 0.35 });
-
   return (
-    <section ref={sectionRef} className="relative w-full px-6 py-40 md:py-56">
-      {/* Occasional butterfly fly-by — confined to this section */}
-      <FloatingButterfly active={inView} />
-
+    <section className="relative w-full px-6 py-40 md:py-56">
       <motion.div
         variants={stagger(0.18)}
         initial="hidden"

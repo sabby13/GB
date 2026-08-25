@@ -39,18 +39,14 @@ export default function WallpaperCarousel() {
           transition={{ duration: 0.9, ease: EASE.smooth }}
           style={{ background: active.gradient }}
         >
-          <video
+          <img
             className="h-full w-full object-cover"
             src={active.src}
-            poster=""
-            muted
-            loop
-            autoPlay
-            playsInline
-            preload="auto"
+            alt={active.title}
+            draggable={false}
             onError={(e) => {
-              // Hide the <video> if the file is missing; the gradient shows through.
-              (e.currentTarget as HTMLVideoElement).style.opacity = "0";
+              // Hide the image if the file is missing; the gradient shows through.
+              (e.currentTarget as HTMLImageElement).style.opacity = "0";
             }}
           />
           {/* subtle screen title */}
