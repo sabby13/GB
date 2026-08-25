@@ -18,27 +18,27 @@ const FEATURES: Feature[] = [
 ];
 
 const item = {
-  hidden: { opacity: 0, y: 36, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 36 },
   visible: {
     opacity: 1,
     y: 0,
+    transition: { duration: 1, ease: EASE.smooth },
+  },
+};
+
+// Only the heading text softens in from a blur — the ghost number stays crisp.
+const textBlur = {
+  hidden: { filter: "blur(8px)" },
+  visible: {
     filter: "blur(0px)",
     transition: { duration: 1, ease: EASE.smooth },
   },
 };
 
-const rule = {
-  hidden: { scaleX: 0 },
-  visible: {
-    scaleX: 1,
-    transition: { duration: 1.1, ease: EASE.expo, delay: 0.15 },
-  },
-};
-
 /**
  * The features, reimagined as an editorial spread — big serif statements with
- * an italic accent, a small index, a giant ghosted number and a hairline that
- * draws in — instead of boxed pills. Two butterflies flutter at the corners.
+ * an italic accent and a giant ghosted number behind each line — instead of
+ * boxed pills. Two butterflies flutter at the corners.
  */
 export default function FeaturePills() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -97,12 +97,12 @@ export default function FeaturePills() {
                 className={`pointer-events-none absolute -top-[0.42em] select-none font-display text-[clamp(6rem,17vw,13rem)] leading-none ${
                   end ? "right-0" : "left-0"
                 }`}
-                style={{ color: "rgba(190, 26, 34, 0.24)" }}
+                style={{ color: "#ff0000" }}
               >
                 {f.n}
               </span>
 
-              <div className="relative z-10">
+              <motion.div variants={textBlur} className="relative z-10">
                 <h3 className="font-display text-[clamp(2.2rem,6.6vw,4.7rem)] leading-[1.04] text-ink">
                   {f.parts.map((p, i) => (
                     <span key={i} className={p.italic ? "italic" : ""}>
@@ -110,15 +110,7 @@ export default function FeaturePills() {
                     </span>
                   ))}
                 </h3>
-
-                <motion.span
-                  variants={rule}
-                  className={`mt-6 block h-px bg-ink/25 ${
-                    end ? "origin-right" : "origin-left"
-                  }`}
-                  style={{ width: "min(42vw, 340px)" }}
-                />
-              </div>
+              </motion.div>
             </motion.div>
           );
         })}
