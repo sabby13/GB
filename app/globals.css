@@ -103,6 +103,27 @@ body {
   display: block;
 }
 
+/* Glowing power dot on the monitor bezel */
+.gb-power-dot {
+  cursor: pointer;
+  animation: gb-power-pulse 2.6s ease-in-out infinite;
+}
+@keyframes gb-power-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 11px 3px rgba(255, 255, 255, 0.95);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gb-power-dot {
+    animation: none;
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.85);
+  }
+}
+
 /* --- Frosted GlassCard surface --- */
 .glass-card {
   --glass-radius: clamp(14px, 3.6cqmin, 44px);

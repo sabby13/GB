@@ -91,23 +91,18 @@ export default function FeaturePills() {
                 end ? "items-end text-right" : "items-start text-left"
               }`}
             >
-              {/* Giant ghosted index behind the line */}
+              {/* Giant ghosted index behind the line (warm red) */}
               <span
                 aria-hidden="true"
-                className={`pointer-events-none absolute -top-[0.42em] select-none font-display text-[clamp(6rem,17vw,13rem)] leading-none text-ink/[0.05] ${
+                className={`pointer-events-none absolute -top-[0.42em] select-none font-display text-[clamp(6rem,17vw,13rem)] leading-none ${
                   end ? "right-0" : "left-0"
                 }`}
+                style={{ color: "rgba(178, 52, 43, 0.16)" }}
               >
                 {f.n}
               </span>
 
               <div className="relative z-10">
-                <span className="mb-3 flex items-center gap-3 text-[11px] uppercase tracking-[0.4em] text-ink/40">
-                  {!end && <span className="text-ink/45">✦</span>}
-                  <span>{f.n}</span>
-                  {end && <span className="text-ink/45">✦</span>}
-                </span>
-
                 <h3 className="font-display text-[clamp(2.2rem,6.6vw,4.7rem)] leading-[1.04] text-ink">
                   {f.parts.map((p, i) => (
                     <span key={i} className={p.italic ? "italic" : ""}>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import WallpaperCarousel from "./WallpaperCarousel";
 import { EASE } from "@/lib/motion";
@@ -9,6 +10,8 @@ import { EASE } from "@/lib/motion";
  * grounded shadow and premium lighting. The screen hosts the wallpaper carousel.
  */
 export default function MonitorShowcase() {
+  const [screenOff, setScreenOff] = useState(false);
+
   return (
     <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 py-28">
       <motion.p
@@ -49,16 +52,27 @@ export default function MonitorShowcase() {
             <WallpaperCarousel />
             {/* Glass reflection across the whole panel */}
             <div
-              className="pointer-events-none absolute inset-0 rounded-[8px]"
+              className="pointer-events-none absolute inset-0 z-[15] rounded-[8px]"
               style={{
                 background:
                   "linear-gradient(115deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 30%)",
               }}
             />
+            {/* Screen off — blacks out the panel when the power dot is clicked */}
+            <div
+              className="pointer-events-none absolute inset-0 z-[30] bg-black transition-opacity duration-500"
+              style={{ opacity: screenOff ? 1 : 0 }}
+              aria-hidden="true"
+            />
           </div>
 
-          {/* Camera dot */}
-          <div className="mx-auto mt-[6px] h-1 w-1 rounded-full bg-black/30" />
+          {/* Power dot on the bezel — glows white; click to turn the screen off/on */}
+          <button
+            type="button"
+            onClick={() => setScreenOff((v) => !v)}
+            aria-label={screenOff ? "Turn screen on" : "Turn screen off"}
+            className="gb-power-dot mx-auto mt-[7px] block h-[7px] w-[7px] rounded-full bg-white"
+          />
         </div>
 
         {/* Stand (tucked behind the screen) */}
@@ -89,7 +103,7 @@ export default function MonitorShowcase() {
       </motion.div>
 
       <p className="mt-10 text-center text-sm text-ink/50">
-        Use the arrows to preview live wallpapers.
+        Use the arrows to preview screensaver
       </p>
     </section>
   );
