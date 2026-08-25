@@ -11,10 +11,10 @@ type Feature = { n: string; align: "start" | "end"; parts: Part[] };
 
 // Each phrase has one word set in italic for an editorial accent.
 const FEATURES: Feature[] = [
-  { n: "01", align: "start", parts: [{ t: "Native by " }, { t: "design", italic: true }] },
-  { n: "02", align: "end", parts: [{ t: "Barely uses " }, { t: "resources", italic: true }] },
-  { n: "03", align: "start", parts: [{ t: "Beautiful", italic: true }, { t: " in motion" }] },
-  { n: "04", align: "end", parts: [{ t: "Yours to " }, { t: "customize", italic: true }] },
+  { n: "1", align: "start", parts: [{ t: "Native by " }, { t: "design", italic: true }] },
+  { n: "2", align: "end", parts: [{ t: "Barely uses " }, { t: "resources", italic: true }] },
+  { n: "3", align: "start", parts: [{ t: "Beautiful", italic: true }, { t: " in motion" }] },
+  { n: "4", align: "end", parts: [{ t: "Yours to " }, { t: "customize", italic: true }] },
 ];
 
 const item = {
@@ -97,7 +97,7 @@ export default function FeaturePills() {
                 className={`pointer-events-none absolute -top-[0.42em] select-none font-display text-[clamp(6rem,17vw,13rem)] leading-none ${
                   end ? "right-0" : "left-0"
                 }`}
-                style={{ color: "rgba(178, 52, 43, 0.16)" }}
+                style={{ color: "rgba(190, 26, 34, 0.24)" }}
               >
                 {f.n}
               </span>

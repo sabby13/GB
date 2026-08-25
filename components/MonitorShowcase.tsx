@@ -71,7 +71,9 @@ export default function MonitorShowcase() {
             type="button"
             onClick={() => setScreenOff((v) => !v)}
             aria-label={screenOff ? "Turn screen on" : "Turn screen off"}
-            className="gb-power-dot mx-auto mt-[7px] block h-[7px] w-[7px] rounded-full bg-white"
+            className={`gb-power-dot mx-auto mt-[7px] block h-[7px] w-[7px] rounded-full ${
+              screenOff ? "gb-power-dot--off" : ""
+            }`}
           />
         </div>
 

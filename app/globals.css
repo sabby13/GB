@@ -103,10 +103,15 @@ body {
   display: block;
 }
 
-/* Glowing power dot on the monitor bezel */
+/* Glowing power dot on the monitor bezel — white when on, amber when off */
 .gb-power-dot {
   cursor: pointer;
+  background: #ffffff;
   animation: gb-power-pulse 2.6s ease-in-out infinite;
+}
+.gb-power-dot--off {
+  background: #ffab1a; /* amber standby */
+  animation-name: gb-power-pulse-amber;
 }
 @keyframes gb-power-pulse {
   0%,
@@ -117,10 +122,22 @@ body {
     box-shadow: 0 0 11px 3px rgba(255, 255, 255, 0.95);
   }
 }
+@keyframes gb-power-pulse-amber {
+  0%,
+  100% {
+    box-shadow: 0 0 5px 1px rgba(255, 171, 26, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 11px 3px rgba(255, 171, 26, 0.95);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .gb-power-dot {
     animation: none;
     box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.85);
+  }
+  .gb-power-dot--off {
+    box-shadow: 0 0 8px 2px rgba(255, 171, 26, 0.85);
   }
 }
 
