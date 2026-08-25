@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 // Height of the fixed off-white header strip.
@@ -30,14 +30,15 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
 
   // Over the first viewport of scroll: rise from centre to the header strip,
   // scaling from the large hero size down to the docked (header) size of 1.
-  const rawY = useTransform(scrollY, [0, vh * 0.9], [0, -(vh / 2 - HEADER_H / 2)], {
+  // Bound DIRECTLY to scroll (no spring) — Lenis already smooths scrolling, and
+  // a spring would lag behind an aggressive scroll and let the wordmark slip
+  // out of the strip mid-transition. Direct binding keeps it locked in place.
+  const y = useTransform(scrollY, [0, vh * 0.9], [0, -(vh / 2 - HEADER_H / 2)], {
     clamp: true,
   });
-  const rawScale = useTransform(scrollY, [0, vh * 0.9], [HERO_SCALE, 1], {
+  const scale = useTransform(scrollY, [0, vh * 0.9], [HERO_SCALE, 1], {
     clamp: true,
   });
-  const y = useSpring(rawY, { stiffness: 120, damping: 26, mass: 0.6 });
-  const scale = useSpring(rawScale, { stiffness: 120, damping: 26, mass: 0.6 });
 
   // The header strip fades in as soon as the user starts scrolling.
   const stripOpacity = useTransform(scrollY, [0, 120], [0, 1], { clamp: true });
