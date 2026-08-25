@@ -82,8 +82,9 @@ export default function WallpaperCarousel() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Persistent live overlay: clock, date, butterfly (mounts once) */}
-      <ScreenSaverOverlay butterflyCount={1} />
+      {/* Persistent live overlay: clock, date, butterfly. Hidden on CUSTOM —
+          that slot is just a still image (your own wallpaper). */}
+      {active.id !== "custom" && <ScreenSaverOverlay butterflyCount={1} />}
 
       {/* Screen glass sheen (above the overlay, below controls) */}
       <div

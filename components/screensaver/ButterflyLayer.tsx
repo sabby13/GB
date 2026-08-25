@@ -2,27 +2,34 @@
 
 import { useEffect, useRef } from "react";
 import { ButterflyController } from "@/lib/butterfly/ButterflyController";
-import { butterflyConfig } from "@/lib/butterfly/config";
+import { butterflyConfig, type ButterflyConfig } from "@/lib/butterfly/config";
 
 const MODEL = "/assets/butterfly.glb";
 
 /**
- * Transparent WebGL canvas layered over the wallpaper, hosting the flying
- * butterflies. The imperative controller owns its own rAF loop, so this mounts
- * once and never re-renders per frame — swapping wallpapers never touches it.
+ * Transparent WebGL canvas hosting flying butterflies, sized to its own box.
+ * The imperative controller owns its rAF loop, so this mounts once and never
+ * re-renders per frame. Pass a `config` (memoised) to reuse it in other places
+ * — e.g. a hover config for the feature-pill corners.
  */
-export function ButterflyLayer({ count = 1 }: { count?: number }) {
+export function ButterflyLayer({
+  count = 1,
+  config = butterflyConfig,
+}: {
+  count?: number;
+  config?: ButterflyConfig;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!butterflyConfig.enabled) return;
+    if (!config.enabled) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     let controller: ButterflyController | null = null;
     try {
-      controller = new ButterflyController(canvas, butterflyConfig);
+      controller = new ButterflyController(canvas, config);
       controller.setCount(count);
       controller.load(MODEL).catch((err) => {
         console.warn("Butterfly failed to load:", err);
@@ -36,8 +43,8 @@ export function ButterflyLayer({ count = 1 }: { count?: number }) {
     return () => {
       controller?.dispose();
     };
-  }, [count]);
+  }, [count, config]);
 
-  if (!butterflyConfig.enabled) return null;
+  if (!config.enabled) return null;
   return <canvas ref={canvasRef} className="gb-butterfly-layer" aria-hidden="true" />;
 }
