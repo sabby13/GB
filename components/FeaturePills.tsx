@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { pillIn, stagger } from "@/lib/motion";
 
 const FEATURES: { label: string; align: "start" | "center" | "end"; offset: string }[] = [
-  { label: "✦ Native by design ✦", align: "center", offset: "0" },
-  { label: "✦ Barely uses resources ✦", align: "start", offset: "-2vw" },
-  { label: "✦ Beautiful in motion ✦", align: "end", offset: "2vw" },
-  { label: "✦ Yours to customize ✦", align: "start", offset: "4vw" },
+  { label: "Native by design ", align: "center", offset: "0" },
+  { label: " Feather-light performance ", align: "start", offset: "-2vw" },
+  { label: " Beautiful in motion ", align: "end", offset: "2vw" },
+  { label: "Yours to customize ", align: "start", offset: "4vw" },
 ];
 
 /**
