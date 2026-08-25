@@ -1,0 +1,40 @@
+.clock-card {
+  /* A softer, more generous surface for the large numerals. */
+  --glass-padding: clamp(20px, 4vmin, 56px) clamp(30px, 6vmin, 84px);
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.7vmin, 26px);
+  line-height: 1;
+  user-select: none;
+  font-family: 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock__segment {
+  display: inline-block;
+  min-width: 1.28em;
+  text-align: center;
+  font-size: clamp(64px, 15vmin, 190px);
+
+  /* A touch more room between the two digits of each unit. */
+  letter-spacing: 0.05em;
+
+  /* Hollow, glassy numerals: near-transparent fill with a fine light outline. */
+  color: rgba(255, 255, 255, 0.06);
+  -webkit-text-stroke: clamp(1.1px, 0.26vmin, 2.2px) rgba(255, 255, 255, 0.9);
+
+  /* Soft glow keeps the outline readable over bright wallpapers. */
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.24);
+}
+
+.clock__separator {
+  font-size: clamp(44px, 10vmin, 130px);
+  color: rgba(255, 255, 255, 0.82);
+  transform: translateY(-0.08em);
+  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.28);
+}

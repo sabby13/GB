@@ -1,0 +1,22 @@
+.date-card {
+  /* A slimmer, pill-like surface to sit under the clock — ~20% smaller. */
+  --glass-radius: clamp(13px, 1.9vmin, 24px);
+  --glass-padding: clamp(7px, 1.2vmin, 14px) clamp(16px, 2.7vmin, 37px);
+}
+
+.date {
+  display: block;
+  text-align: center;
+  user-select: none;
+
+  /* Same family as the clock, scaled down and tracked out to complement it. */
+  font-family: 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: clamp(11px, 1.85vmin, 24px);
+
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.28);
+}
