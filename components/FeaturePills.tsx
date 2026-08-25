@@ -11,10 +11,10 @@ type Feature = { n: string; align: "start" | "end"; parts: Part[] };
 
 // Each phrase has one word set in italic for an editorial accent.
 const FEATURES: Feature[] = [
-  { n: "1", align: "start", parts: [{ t: "Native by " }, { t: "design", italic: true }] },
-  { n: "2", align: "end", parts: [{ t: "Barely uses " }, { t: "resources", italic: true }] },
-  { n: "3", align: "start", parts: [{ t: "Beautiful", italic: true }, { t: " in motion" }] },
-  { n: "4", align: "end", parts: [{ t: "Yours to " }, { t: "customize", italic: true }] },
+  { n: "I", align: "start", parts: [{ t: "Native by " }, { t: "design", italic: true }] },
+  { n: "II", align: "end", parts: [{ t: "Barely uses " }, { t: "resources", italic: true }] },
+  { n: "III", align: "start", parts: [{ t: "Beautiful", italic: true }, { t: " in motion" }] },
+  { n: "IV", align: "end", parts: [{ t: "Yours to " }, { t: "customize", italic: true }] },
 ];
 
 const item = {

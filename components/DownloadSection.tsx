@@ -80,6 +80,20 @@ export default function DownloadSection() {
             <span className="text-lg">Download</span>
           </a>
         </motion.div>
+
+        {/* Credit + support, beneath the download card */}
+        <div className="mx-auto mt-10 flex flex-col items-center gap-2 text-center">
+          <p className="text-sm text-ink/80">created by Sahib / Sabby</p>
+          <p className="text-sm text-ink/60">
+            support :{" "}
+            <a
+              href="mailto:info.hellosienna@gmail.com"
+              className="text-[#3b82f6] hover:underline"
+            >
+              info.hellosienna@gmail.com
+            </a>
+          </p>
+        </div>
       </div>
     </section>
   );
