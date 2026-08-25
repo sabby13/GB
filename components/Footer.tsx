@@ -121,7 +121,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Sahib — visit sabby13.github.io"
-            className="mt-1 inline-block translate-x-3 transition-transform duration-300 hover:scale-[1.04]"
+            className="mt-1 inline-block translate-x-10 transition-transform duration-300 hover:scale-[1.04]"
           >
             <img
               src="/assets/sign.png"
