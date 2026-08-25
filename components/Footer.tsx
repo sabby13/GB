@@ -65,7 +65,7 @@ export default function Footer() {
                     transition={{ duration: 0.5, ease: EASE.smooth }}
                     className="font-display text-lg italic text-ink/70"
                   >
-                    ✦ You&apos;re on the list
+                    ✦ See you soon
                   </motion.p>
                 ) : (
                   <motion.button
@@ -111,7 +111,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 1.2, ease: EASE.smooth }}
-          className="mt-2 flex flex-col items-end"
+          className="-mt-12 flex flex-col items-end md:-mt-16"
         >
           <p className="font-display text-[clamp(1.6rem,3.4vw,2.4rem)] italic leading-snug text-[#2b3a67]">
             ~ yours truly
@@ -121,7 +121,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Sahib — visit sabby13.github.io"
-            className="mt-1 inline-block transition-transform duration-300 hover:scale-[1.04]"
+            className="mt-1 inline-block translate-x-3 transition-transform duration-300 hover:scale-[1.04]"
           >
             <img
               src="/assets/sign.png"
