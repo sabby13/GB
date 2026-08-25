@@ -32,7 +32,7 @@ function Flyer({ onDone }: { onDone: () => void }) {
       baseY: (Math.random() - 0.5) * 3,
       dir: Math.random() > 0.5 ? 1 : -1,
       duration: 8 + Math.random() * 3,
-      scale: 0.5 + Math.random() * 0.3,
+      scale: 1.5 + Math.random() * 0.9,
     }),
     []
   );
@@ -65,11 +65,11 @@ function Flyer({ onDone }: { onDone: () => void }) {
     g.position.y = params.baseY + Math.sin(el * 1.6) * 0.9;
     g.position.z = 0;
     g.scale.setScalar(norm * params.scale);
-    // Face the wings toward the viewer (dorsal view) rather than side-on, with a
-    // gentle bank/flap so it still reads as flying.
-    g.rotation.z = Math.sin(el * 2) * 0.15;
-    g.rotation.y = (params.dir > 0 ? -0.15 : 0.15) + Math.sin(el * 1.3) * 0.08;
-    g.rotation.x = -0.12 + Math.sin(el * 5) * 0.14;
+    // Dorsal view: pitch the butterfly ~-90° so its spread wings face the
+    // viewer, with a gentle bob/bank/heading so it still reads as flying.
+    g.rotation.x = -1.45 + Math.sin(el * 5) * 0.12;
+    g.rotation.y = (params.dir > 0 ? -0.1 : 0.1) + Math.sin(el * 1.3) * 0.06;
+    g.rotation.z = Math.sin(el * 2) * 0.12;
   });
 
   return (
