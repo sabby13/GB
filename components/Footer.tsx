@@ -101,7 +101,7 @@ export default function Footer() {
           />
           {/* Monarch resting on the top-left rose, facing 2 o'clock */}
           <div className="pointer-events-none absolute left-[-4%] top-[-8%] h-[58%] w-[58%]">
-            <StaticButterfly orient={{ z: 1.02, y: -0.2 }} scaleMul={1.1} />
+            <StaticButterfly orient={{ z: 2.5, y: 0.5 }} scaleMul={1.1} />
           </div>
         </motion.div>
 
