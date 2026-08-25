@@ -14,22 +14,22 @@ type Feature = { i: string; parts: Part[]; body: string };
 const FEATURES: Feature[] = [
   {
     i: "I",
-    parts: [{ t: "Native by " }, { t: "design", italic: true }],
+    parts: [{ t: "Native." }],
     body: "Built on Windows internals, not bolted on top. It wakes instantly and behaves like it always belonged.",
   },
   {
     i: "II",
-    parts: [{ t: "Feather-", italic: false }, { t: "light", italic: true }],
+    parts: [{ t: "Feather-light." }],
     body: "A few megabytes of memory and a whisper of CPU. Your machine stays cool, quiet, and quick.",
   },
   {
     i: "III",
-    parts: [{ t: "Alive in " }, { t: "motion", italic: true }],
+    parts: [{ t: "Alive." }],
     body: "Monarchs rendered in real time drift across your wallpaper — every flight its own, never a loop.",
   },
   {
     i: "IV",
-    parts: [{ t: "Yours to " }, { t: "shape", italic: true }],
+    parts: [{ t: "Yours." }],
     body: "Your wallpapers, your palette, your pace. Set the mood and make it unmistakably yours.",
   },
 ];
