@@ -13,7 +13,17 @@ useGLTF.preload(MODEL);
  * A single decorative butterfly, centred in its canvas, posed dorsally
  * (wings toward the viewer) with a slow idle flap.
  */
-function Butterfly({ flip }: { flip: boolean }) {
+type Orient = { x?: number; y?: number; z?: number };
+
+function Butterfly({
+  flip,
+  orient,
+  scaleMul = 1,
+}: {
+  flip: boolean;
+  orient?: Orient;
+  scaleMul?: number;
+}) {
   const gltf = useGLTF(MODEL) as unknown as {
     scene: THREE.Group;
     animations: THREE.AnimationClip[];
@@ -45,24 +55,36 @@ function Butterfly({ flip }: { flip: boolean }) {
     };
   }, [gltf.animations, mixer]);
 
+  const baseX = orient?.x ?? -1.45;
+  const baseY = orient?.y ?? (flip ? 0.35 : -0.35);
+  const baseZ = orient?.z ?? (flip ? 0.28 : -0.28);
+
   useFrame((_, dt) => {
     mixer.update(dt);
     const g = ref.current;
     if (!g) return;
     const el = performance.now() / 1000 - t0.current;
-    g.rotation.x = -1.45 + Math.sin(el * 1.1) * 0.06; // dorsal (wings to viewer)
-    g.rotation.z = (flip ? 0.28 : -0.28) + Math.sin(el * 0.8) * 0.06;
-    g.rotation.y = flip ? 0.35 : -0.35;
+    g.rotation.x = baseX + Math.sin(el * 1.1) * 0.06; // dorsal (wings to viewer)
+    g.rotation.z = baseZ + Math.sin(el * 0.8) * 0.06;
+    g.rotation.y = baseY;
   });
 
   return (
-    <group ref={ref} scale={norm * 2.1}>
+    <group ref={ref} scale={norm * 2.1 * scaleMul}>
       <primitive object={cloned} />
     </group>
   );
 }
 
-export default function StaticButterflyScene({ flip = false }: { flip?: boolean }) {
+export default function StaticButterflyScene({
+  flip = false,
+  orient,
+  scaleMul = 1,
+}: {
+  flip?: boolean;
+  orient?: Orient;
+  scaleMul?: number;
+}) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 45 }}
@@ -74,7 +96,7 @@ export default function StaticButterflyScene({ flip = false }: { flip?: boolean 
       <directionalLight position={[3, 5, 4]} intensity={1.1} />
       <directionalLight position={[-3, -2, 2]} intensity={0.35} />
       <Suspense fallback={null}>
-        <Butterfly flip={flip} />
+        <Butterfly flip={flip} orient={orient} scaleMul={scaleMul} />
       </Suspense>
     </Canvas>
   );

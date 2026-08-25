@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 // Height of the fixed off-white header strip.
@@ -43,6 +43,31 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
   // The header strip fades in as soon as the user starts scrolling.
   const stripOpacity = useTransform(scrollY, [0, 120], [0, 1], { clamp: true });
 
+  // Hide the header + wordmark entirely once the footer line reaches the top.
+  const [atFooter, setAtFooter] = useState(false);
+  const hideFactor = useMotionValue(1);
+  useEffect(() => {
+    const check = () => {
+      const f = document.getElementById("site-footer");
+      if (!f) return;
+      const hide = f.getBoundingClientRect().top <= HEADER_H + 4;
+      hideFactor.set(hide ? 0 : 1);
+      setAtFooter(hide);
+    };
+    check();
+    const unsub = scrollY.on("change", check);
+    window.addEventListener("resize", check);
+    return () => {
+      unsub();
+      window.removeEventListener("resize", check);
+    };
+  }, [scrollY, hideFactor]);
+
+  const stripFinal = useTransform(
+    [stripOpacity, hideFactor],
+    ([s, h]: number[]) => s * h
+  );
+
   return (
     <>
       {/* Persistent off-white header strip (no divider line) */}
@@ -52,7 +77,7 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
         style={{
           height: HEADER_H,
           background: "var(--cream)",
-          opacity: stripOpacity,
+          opacity: stripFinal,
         }}
       />
 
@@ -62,10 +87,10 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
           style={{ y, scale }}
           initial={{ opacity: 0, filter: "blur(8px)" }}
           animate={{
-            opacity: revealed ? 1 : 0,
+            opacity: revealed && !atFooter ? 1 : 0,
             filter: revealed ? "blur(0px)" : "blur(8px)",
           }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: atFooter ? 0.4 : 1.1, ease: [0.16, 1, 0.3, 1] }}
           className="select-none whitespace-nowrap"
         >
           {/* Same size as the "Installation" / "Download" headings */}
