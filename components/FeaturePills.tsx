@@ -1,167 +1,132 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useMemo, useRef } from "react";
-import { useInView } from "framer-motion";
-import { EASE, stagger } from "@/lib/motion";
-import { ButterflyLayer } from "./screensaver/ButterflyLayer";
-import { butterflyConfig } from "@/lib/butterfly/config";
 
-type Part = { t: string; italic?: boolean };
-type Feature = { i: string; parts: Part[]; body: string };
+type Feature = { name: string; body: string };
 
-// Small serif index, a headline with one italic accent, and a line of body.
 const FEATURES: Feature[] = [
-  {
-    i: "I",
-    parts: [{ t: "Native." }],
-    body: "Built for Windows, not adapted to it.",
-  },
-  {
-    i: "II",
-    parts: [{ t: "Feather-light." }],
-    body: "Runs quietly, so your desktop can be admired.",
-  },
-  {
-    i: "III",
-    parts: [{ t: "Alive." }],
-    body: "Every butterfly follows its own path. No loops. No repetition.",
-  },
-  {
-    i: "IV",
-    parts: [{ t: "Yours." }],
-    body: "Make every desktop unmistakably yours.",
-  },
+  { name: "Native", body: "Built for Windows, not adapted to it." },
+  { name: "Feather-light", body: "Runs quietly, so your desktop can be admired." },
+  { name: "Alive", body: "Every butterfly follows its own path. No loops. No repetition." },
+  { name: "Yours", body: "Make every desktop unmistakably yours." },
 ];
 
-// Warm, deep monarch-red — a restrained accent, not a siren.
-const ACCENT = "#9e2b26";
+const RED = "#ff1a1a";
 
-const cell = {
-  hidden: { opacity: 0, y: 34, filter: "blur(6px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 1, ease: EASE.smooth },
-  },
-};
+/* ---- typewriter that types while `active`, then clears ---- */
+function Typewriter({ text, active }: { text: string; active: boolean }) {
+  const [shown, setShown] = useState("");
 
-const rule = {
-  hidden: { scaleX: 0 },
-  visible: {
-    scaleX: 1,
-    transition: { duration: 1.1, ease: EASE.expo },
-  },
-};
+  useEffect(() => {
+    if (!active) {
+      setShown("");
+      return;
+    }
+    let i = 0;
+    const id = setInterval(() => {
+      i += 1;
+      setShown(text.slice(0, i));
+      if (i >= text.length) clearInterval(id);
+    }, 26);
+    return () => clearInterval(id);
+  }, [active, text]);
 
-const introItem = {
-  hidden: { opacity: 0, y: 26 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 1, ease: EASE.smooth },
-  },
-};
+  return (
+    <span>
+      {shown}
+      {active && <span className="gb-caret">▍</span>}
+    </span>
+  );
+}
+
+/* ---- one feature: animated red marker heading + hover typewriter body ---- */
+function FeatureRow({ f, index }: { f: Feature; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  const [pinned, setPinned] = useState(false); // tap support on touch
+  const active = hovered || pinned;
+
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 40, scale: 0.7, rotate: -8 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotate: -1.5,
+          transition: { type: "spring", stiffness: 260, damping: 16 },
+        },
+      }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      onTapStart={() => setPinned((v) => !v)}
+      whileHover={{ scale: 1.03, rotate: 0 }}
+      className="group cursor-default select-none"
+    >
+      {/* Red marker heading with a twinkling asterisk */}
+      <h3
+        className="font-marker flex items-start leading-[0.95] text-[clamp(2.6rem,7.5vw,5.5rem)]"
+        style={{ color: RED }}
+      >
+        <motion.span
+          aria-hidden="true"
+          className="mr-2 inline-block"
+          animate={{ rotate: [0, 18, -12, 0], scale: [1, 1.18, 0.96, 1] }}
+          transition={{
+            duration: 3.4,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: index * 0.35,
+          }}
+        >
+          *
+        </motion.span>
+        <span>{f.name}</span>
+      </h3>
+
+      {/* White marker body — reserved space, typewriter on hover */}
+      <motion.p
+        animate={{ y: active ? 0 : 8, opacity: active ? 1 : 0.0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="font-hand mt-3 min-h-[2.4em] max-w-2xl pl-[0.55em] text-[clamp(1.25rem,3vw,2.1rem)] leading-snug text-white"
+      >
+        <Typewriter text={f.body} active={active} />
+      </motion.p>
+    </motion.div>
+  );
+}
 
 /**
- * The feature section, rebuilt as a calm editorial spec-sheet: a serif intro,
- * then a 2×2 grid of quiet statements — small roman index, a headline with an
- * italic accent, a hairline that draws in, and one line of supporting copy.
- * A single monarch drifts in the upper corner, clear of the text.
+ * The feature section as a black cutting-mat: hand-drawn marker headings in red
+ * that pop and twinkle in, each hiding a white description that types out
+ * beneath it on hover.
  */
 export default function FeaturePills() {
   const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { amount: 0.2 });
-
-  const cornerConfig = useMemo(
-    () => ({
-      ...butterflyConfig,
-      hover: true,
-      hoverCenter: [0, 0] as [number, number],
-      hoverRadius: 1.15,
-      keepoutX: 0,
-      keepoutY: 0,
-      scale: 2.0,
-    }),
-    []
-  );
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden px-6 py-40 md:py-56"
+      className="relative flex min-h-screen w-full items-center overflow-hidden py-32 md:py-40"
+      style={{
+        background: "url('/assets/mat2.svg') center / cover no-repeat #000000",
+      }}
     >
-      {/* One quiet monarch, upper-right, clear of the copy */}
-      {inView && (
-        <div className="pointer-events-none absolute right-2 top-10 z-0 h-40 w-40 opacity-90 md:right-16 md:top-16 md:h-52 md:w-52">
-          <ButterflyLayer count={1} config={cornerConfig} />
-        </div>
-      )}
-
-      <div className="relative z-10 mx-auto max-w-5xl">
-        {/* Intro */}
-        <motion.div
-          variants={stagger(0.14)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
-          className="mb-24 max-w-2xl md:mb-32"
-        >
-          <motion.h2
-            variants={introItem}
-            className="font-display text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.02] text-ink"
-          >
-            Crafted to <span className="italic">disappear.</span>
-          </motion.h2>
-          <motion.p
-            variants={introItem}
-            className="mt-6 max-w-md font-sans text-base leading-relaxed"
-            style={{ color: ACCENT }}
-          >
-            Until someone notices how beautiful your desktop has become.
-          </motion.p>
-        </motion.div>
-
-        {/* 2×2 spec grid */}
-        <motion.div
-          variants={stagger(0.16)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 gap-x-16 gap-y-16 md:grid-cols-2 md:gap-y-24"
-        >
-          {FEATURES.map((f) => (
-            <motion.div key={f.i} variants={cell} className="group relative pt-7">
-              {/* Hairline that draws in */}
-              <motion.span
-                variants={rule}
-                className="absolute left-0 top-0 block h-px w-full origin-left bg-ink/15"
-              />
-
-              <div className="flex items-baseline gap-4">
-                <span
-                  className="font-display text-lg italic leading-none"
-                  style={{ color: ACCENT }}
-                >
-                  {f.i}
-                </span>
-                <h3 className="font-display text-[clamp(1.9rem,3.6vw,2.9rem)] leading-[1.05] text-ink">
-                  {f.parts.map((p, i) => (
-                    <span key={i} className={p.italic ? "italic" : ""}>
-                      {p.t}
-                    </span>
-                  ))}
-                </h3>
-              </div>
-
-              <p className="mt-4 max-w-sm font-sans text-[15px] leading-relaxed text-ink/55">
-                {f.body}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+      <motion.div
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.22, delayChildren: 0.1 } },
+        }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-8 md:gap-20 md:px-16"
+      >
+        {FEATURES.map((f, i) => (
+          <FeatureRow key={f.name} f={f} index={i} />
+        ))}
+      </motion.div>
     </section>
   );
 }

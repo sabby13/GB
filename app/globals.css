@@ -56,6 +56,27 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* Cutting-mat feature section — hand-drawn marker type */
+.font-marker {
+  font-family: "Permanent Marker", "Comic Sans MS", cursive;
+}
+.font-hand {
+  font-family: "Patrick Hand", "Comic Sans MS", cursive;
+}
+
+/* Blinking typewriter caret */
+@keyframes gb-caret-blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.gb-caret {
+  display: inline-block;
+  width: 0.5ch;
+  color: #ffffff;
+  animation: gb-caret-blink 1s steps(1) infinite;
+}
+
 /* A soft glass surface used by callouts and arrow buttons */
 .glass {
   background: rgba(255, 255, 255, 0.55);
