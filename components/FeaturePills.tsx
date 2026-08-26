@@ -15,22 +15,22 @@ const FEATURES: Feature[] = [
   {
     i: "I",
     parts: [{ t: "Native." }],
-    body: "Built on Windows internals, not bolted on top. It wakes instantly and behaves like it always belonged.",
+    body: "Built for Windows, not adapted to it.",
   },
   {
     i: "II",
     parts: [{ t: "Feather-light." }],
-    body: "A few megabytes of memory and a whisper of CPU. Your machine stays cool, quiet, and quick.",
+    body: "Runs quietly, so your desktop can be admired.",
   },
   {
     i: "III",
     parts: [{ t: "Alive." }],
-    body: "Monarchs rendered in real time drift across your wallpaper — every flight its own, never a loop.",
+    body: "Every butterfly follows its own path. No loops. No repetition.",
   },
   {
     i: "IV",
     parts: [{ t: "Yours." }],
-    body: "Your wallpapers, your palette, your pace. Set the mood and make it unmistakably yours.",
+    body: "Make every desktop unmistakably yours.",
   },
 ];
 
@@ -124,8 +124,7 @@ export default function FeaturePills() {
             variants={introItem}
             className="mt-6 max-w-md font-sans text-base leading-relaxed text-ink/55"
           >
-            Four reasons GlassButterfly feels less like software you run and more
-            like part of your desk.
+            Until someone notices how beautiful your desktop has become.
           </motion.p>
         </motion.div>
 
