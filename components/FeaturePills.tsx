@@ -33,7 +33,7 @@ function FeatureRow({ f, index }: { f: Feature; index: number }) {
     >
       {/* Red heading with a twinkling asterisk bullet */}
       <h3
-        className="font-marker flex items-start leading-[0.95] text-[clamp(2.6rem,7.5vw,5.5rem)]"
+        className="font-marker flex items-start leading-[0.95] text-[clamp(5.2rem,15vw,11rem)]"
         style={{ color: RED }}
       >
         <motion.span
@@ -53,7 +53,7 @@ function FeatureRow({ f, index }: { f: Feature; index: number }) {
       </h3>
 
       {/* White quote in the same hand */}
-      <p className="font-marker mt-3 max-w-2xl pl-[0.55em] text-[clamp(1.25rem,3vw,2.1rem)] leading-snug text-white">
+      <p className="font-marker mt-5 max-w-3xl pl-[0.55em] text-[clamp(2.5rem,6vw,4.2rem)] leading-snug text-white">
         {f.body}
       </p>
     </motion.div>
@@ -70,11 +70,17 @@ export default function FeaturePills() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-screen w-full items-center overflow-hidden py-32 md:py-40"
-      style={{
-        background: "url('/assets/mat2.svg') center / cover no-repeat #000000",
-      }}
+      className="relative w-full overflow-hidden bg-black py-32 md:py-40"
     >
+      {/* Two cutting-mat plates stacked into one tall backdrop */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 select-none"
+      >
+        <img src="/assets/mat1.png" alt="" className="block w-full" draggable={false} />
+        <img src="/assets/mat2.png" alt="" className="block w-full" draggable={false} />
+      </div>
+
       <motion.div
         variants={{
           hidden: {},
@@ -83,7 +89,7 @@ export default function FeaturePills() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
-        className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-8 md:gap-20 md:px-16"
+        className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-28 px-8 md:gap-48 md:px-16"
       >
         {FEATURES.map((f, i) => (
           <FeatureRow key={f.name} f={f} index={i} />
