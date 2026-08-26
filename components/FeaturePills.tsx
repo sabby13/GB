@@ -108,12 +108,6 @@ export default function FeaturePills() {
           viewport={{ once: true, amount: 0.6 }}
           className="mb-24 max-w-2xl md:mb-32"
         >
-          <motion.p
-            variants={introItem}
-            className="mb-5 font-sans text-xs uppercase tracking-[0.34em] text-ink/40"
-          >
-            The craft
-          </motion.p>
           <motion.h2
             variants={introItem}
             className="font-display text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.02] text-ink"
@@ -122,7 +116,8 @@ export default function FeaturePills() {
           </motion.h2>
           <motion.p
             variants={introItem}
-            className="mt-6 max-w-md font-sans text-base leading-relaxed text-ink/55"
+            className="mt-6 max-w-md font-sans text-base leading-relaxed"
+            style={{ color: ACCENT }}
           >
             Until someone notices how beautiful your desktop has become.
           </motion.p>
