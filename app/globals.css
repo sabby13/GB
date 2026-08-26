@@ -56,25 +56,23 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Cutting-mat feature section — hand-drawn marker type */
-.font-marker {
-  font-family: "Permanent Marker", "Comic Sans MS", cursive;
-}
-.font-hand {
-  font-family: "Patrick Hand", "Comic Sans MS", cursive;
+/* FC Magic (เอฟซี เมจิก) — self-hosted for the cutting-mat feature section.
+   Drop the font file into public/fonts/ named fc-magic.woff2 / .ttf / .otf. */
+@font-face {
+  font-family: "FC Magic";
+  src:
+    url("/fonts/fc-magic.woff2") format("woff2"),
+    url("/fonts/fc-magic.ttf") format("truetype"),
+    url("/fonts/fc-magic.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* Blinking typewriter caret */
-@keyframes gb-caret-blink {
-  0%, 45% { opacity: 1; }
-  50%, 95% { opacity: 0; }
-  100% { opacity: 1; }
-}
-.gb-caret {
-  display: inline-block;
-  width: 0.5ch;
-  color: #ffffff;
-  animation: gb-caret-blink 1s steps(1) infinite;
+/* Cutting-mat feature section — FC Magic, falling back to a marker face. */
+.font-marker,
+.font-hand {
+  font-family: "FC Magic", "Permanent Marker", "Comic Sans MS", cursive;
 }
 
 /* A soft glass surface used by callouts and arrow buttons */

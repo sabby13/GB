@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 
 type Feature = { name: string; body: string };
@@ -14,38 +14,8 @@ const FEATURES: Feature[] = [
 
 const RED = "#ff1a1a";
 
-/* ---- typewriter that types while `active`, then clears ---- */
-function Typewriter({ text, active }: { text: string; active: boolean }) {
-  const [shown, setShown] = useState("");
-
-  useEffect(() => {
-    if (!active) {
-      setShown("");
-      return;
-    }
-    let i = 0;
-    const id = setInterval(() => {
-      i += 1;
-      setShown(text.slice(0, i));
-      if (i >= text.length) clearInterval(id);
-    }, 26);
-    return () => clearInterval(id);
-  }, [active, text]);
-
-  return (
-    <span>
-      {shown}
-      {active && <span className="gb-caret">▍</span>}
-    </span>
-  );
-}
-
-/* ---- one feature: animated red marker heading + hover typewriter body ---- */
+/* ---- one feature: animated red marker heading + white quote beneath ---- */
 function FeatureRow({ f, index }: { f: Feature; index: number }) {
-  const [hovered, setHovered] = useState(false);
-  const [pinned, setPinned] = useState(false); // tap support on touch
-  const active = hovered || pinned;
-
   return (
     <motion.div
       variants={{
@@ -58,13 +28,10 @@ function FeatureRow({ f, index }: { f: Feature; index: number }) {
           transition: { type: "spring", stiffness: 260, damping: 16 },
         },
       }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      onTapStart={() => setPinned((v) => !v)}
       whileHover={{ scale: 1.03, rotate: 0 }}
       className="group cursor-default select-none"
     >
-      {/* Red marker heading with a twinkling asterisk */}
+      {/* Red heading with a twinkling asterisk bullet */}
       <h3
         className="font-marker flex items-start leading-[0.95] text-[clamp(2.6rem,7.5vw,5.5rem)]"
         style={{ color: RED }}
@@ -85,22 +52,17 @@ function FeatureRow({ f, index }: { f: Feature; index: number }) {
         <span>{f.name}</span>
       </h3>
 
-      {/* White marker body — reserved space, typewriter on hover */}
-      <motion.p
-        animate={{ y: active ? 0 : 8, opacity: active ? 1 : 0.0 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="font-hand mt-3 min-h-[2.4em] max-w-2xl pl-[0.55em] text-[clamp(1.25rem,3vw,2.1rem)] leading-snug text-white"
-      >
-        <Typewriter text={f.body} active={active} />
-      </motion.p>
+      {/* White quote in the same hand */}
+      <p className="font-marker mt-3 max-w-2xl pl-[0.55em] text-[clamp(1.25rem,3vw,2.1rem)] leading-snug text-white">
+        {f.body}
+      </p>
     </motion.div>
   );
 }
 
 /**
- * The feature section as a black cutting-mat: hand-drawn marker headings in red
- * that pop and twinkle in, each hiding a white description that types out
- * beneath it on hover.
+ * The feature section as a black cutting-mat: hand-drawn FC Magic headings in
+ * red — each with a twinkling asterisk that pops in — and a white quote beneath.
  */
 export default function FeaturePills() {
   const sectionRef = useRef<HTMLElement>(null);
