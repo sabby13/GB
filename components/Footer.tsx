@@ -35,7 +35,7 @@ export default function Footer() {
             Stay close
           </h2>
           <p className="mt-4 font-display text-[clamp(1.5rem,4vw,2.25rem)] leading-tight text-ink/90">
-            Building more beautiful software & products.
+            We&apos;re building more beautiful software.
           </p>
 
           {/* E-mail capture — the CTA disappears once you're in */}
@@ -121,7 +121,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Sahib — visit sabby13.github.io"
-            className="mt-1 inline-block translate-x-10 transition-transform duration-300 hover:scale-[1.04]"
+            className="mt-1 inline-block transition-transform duration-300 hover:scale-[1.04] md:translate-x-10"
           >
             <img
               src="/assets/sign.png"

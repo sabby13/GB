@@ -76,7 +76,7 @@ export default function FeaturePills() {
                   <motion.p
                     animate={{ opacity: on ? 1 : 0, y: on ? 0 : 6 }}
                     transition={{ duration: 0.3, ease: EASE.smooth }}
-                    className={`font-sans text-[clamp(1.3rem,2.8vw,2.4rem)] font-light leading-snug tracking-tight text-white ${
+                    className={`font-sans text-[clamp(1.05rem,2.8vw,2.4rem)] font-light leading-snug tracking-tight text-white ${
                       f.nowrap ? "whitespace-nowrap" : ""
                     }`}
                   >

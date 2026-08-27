@@ -6,7 +6,7 @@ import DownloadSection from "@/components/DownloadSection";
 import Footer from "@/components/Footer";
 export default function Home() {
   return (
-    <main className="relative w-full">
+    <main className="relative w-full overflow-x-hidden">
 
       {/* Opening sequence + sticky logo */}
       <HeroExperience />
