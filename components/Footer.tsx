@@ -111,7 +111,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 1.2, ease: EASE.smooth }}
-          className="-mt-24 flex flex-col items-end md:-mt-32"
+          className="mt-6 flex flex-col items-center md:-mt-32 md:items-end"
         >
           <p className="font-display text-[clamp(1.6rem,3.4vw,2.4rem)] italic leading-snug text-[#2b3a67]">
             ~ yours truly

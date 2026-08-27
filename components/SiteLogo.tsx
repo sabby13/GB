@@ -4,7 +4,7 @@ import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 // Height of the fixed off-white header strip.
-const HEADER_H = 70;
+const HEADER_H = 81;
 // Hero (centred) size relative to the docked size (keeps the big reveal).
 const HERO_SCALE = 2.15;
 
@@ -19,14 +19,21 @@ const HERO_SCALE = 2.15;
  */
 export default function SiteLogo({ revealed }: { revealed: boolean }) {
   const [vh, setVh] = useState(900);
+  const [vw, setVw] = useState(1200);
   const { scrollY } = useScroll();
 
   useEffect(() => {
-    const onResize = () => setVh(window.innerHeight);
+    const onResize = () => {
+      setVh(window.innerHeight);
+      setVw(window.innerWidth);
+    };
     onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Smaller hero reveal on phones so the wordmark doesn't span the screen.
+  const heroScale = vw < 768 ? 1.55 : HERO_SCALE;
 
   // Over the first viewport of scroll: rise from centre to the header strip,
   // scaling from the large hero size down to the docked (header) size of 1.
@@ -36,7 +43,7 @@ export default function SiteLogo({ revealed }: { revealed: boolean }) {
   const y = useTransform(scrollY, [0, vh * 0.9], [0, -(vh / 2 - HEADER_H / 2)], {
     clamp: true,
   });
-  const scale = useTransform(scrollY, [0, vh * 0.9], [HERO_SCALE, 1], {
+  const scale = useTransform(scrollY, [0, vh * 0.9], [heroScale, 1], {
     clamp: true,
   });
 
