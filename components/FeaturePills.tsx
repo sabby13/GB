@@ -24,12 +24,29 @@ export default function FeaturePills() {
 
   return (
     <section className="relative w-full bg-black">
+      {/* Mobile: zoomed image only, no quotes */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 1, ease: EASE.smooth }}
-        className="relative w-full"
+        className="overflow-hidden md:hidden"
+      >
+        <img
+          src="/assets/f2.png"
+          alt="Native, Feather-light, Alive, Yours"
+          draggable={false}
+          className="relative left-1/2 block h-auto w-[170%] max-w-none -translate-x-1/2 select-none"
+        />
+      </motion.div>
+
+      {/* Desktop: image + hover-to-reveal quotes */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1, ease: EASE.smooth }}
+        className="relative hidden w-full md:block"
       >
         <img
           src="/assets/f2.png"

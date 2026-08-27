@@ -11,7 +11,7 @@ const QUOTE = "~ let something Beautiful live on your Screen ~".split(" ");
 
 export default function DownloadSection() {
   return (
-    <section className="relative w-full bg-white px-6 py-40">
+    <section className="relative w-full bg-white px-6 py-24 md:py-40">
       <div className="mx-auto max-w-5xl">
         {/* Word-by-word quote reveal (not a single fade) */}
         <motion.p
@@ -38,7 +38,7 @@ export default function DownloadSection() {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 1, ease: EASE.expo }}
-          className="mx-auto w-full max-w-[420px] rounded-[28px] bg-white px-10 pb-10 pt-5 text-center"
+          className="mx-auto w-full max-w-[300px] rounded-[28px] bg-white px-8 pb-9 pt-6 text-center md:max-w-[420px] md:px-10 md:pb-10 md:pt-5"
           style={{ boxShadow: "0 30px 80px -30px rgba(0,0,0,0.35)" }}
         >
           {/* App icon (your logo.png) */}
