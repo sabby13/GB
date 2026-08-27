@@ -5,14 +5,14 @@ import { motion } from "framer-motion";
 import { EASE } from "@/lib/motion";
 
 type Box = { l: number; t: number; w: number; h: number };
-type Feature = { name: string; body: string; box: Box };
+type Feature = { name: string; body: string; box: Box; nowrap?: boolean };
 
 // Boxes are % of f2.png (the red headings), measured from the image itself.
 const FEATURES: Feature[] = [
   { name: "Native", body: "Built for Windows, not adapted to it.", box: { l: 39.9, t: 8.7, w: 23.4, h: 9.5 } },
   { name: "Feather-light", body: "Runs quietly, so your desktop can be admired.", box: { l: 28.3, t: 34.2, w: 43.7, h: 11.6 } },
   { name: "Alive", body: "Every butterfly follows its own path. No loops. No repetition.", box: { l: 43.1, t: 59.3, w: 17.2, h: 9.7 } },
-  { name: "Yours", body: "Make every desktop unmistakably yours.", box: { l: 41.6, t: 84.1, w: 19.3, h: 9.8 } },
+  { name: "Yours", body: "Make every desktop unmistakably yours.", box: { l: 41.6, t: 84.1, w: 19.3, h: 9.8 }, nowrap: true },
 ];
 
 /**
@@ -70,13 +70,15 @@ export default function FeaturePills() {
                   style={{
                     left: `${cx}%`,
                     top: `${f.box.t + f.box.h + 0.8}%`,
-                    width: "min(84vw, 640px)",
+                    width: f.nowrap ? "max-content" : "min(84vw, 640px)",
                   }}
                 >
                   <motion.p
                     animate={{ opacity: on ? 1 : 0, y: on ? 0 : 6 }}
                     transition={{ duration: 0.3, ease: EASE.smooth }}
-                    className="font-sans text-[clamp(1.3rem,2.8vw,2.4rem)] font-light leading-snug tracking-tight text-white"
+                    className={`font-sans text-[clamp(1.3rem,2.8vw,2.4rem)] font-light leading-snug tracking-tight text-white ${
+                      f.nowrap ? "whitespace-nowrap" : ""
+                    }`}
                   >
                     {f.body}
                   </motion.p>
