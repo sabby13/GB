@@ -11,7 +11,6 @@ import { EASE } from "@/lib/motion";
 
 type Step = { img: string; caption: string };
 
-// Captions lightly reworded for clarity; images live in /assets/Installtion.
 const STEPS: Step[] = [
   { img: "/assets/Installtion/1.png", caption: "Download the .zip and extract it to a folder." },
   { img: "/assets/Installtion/2.png", caption: "Open the extracted GlassButterfly folder." },
@@ -30,7 +29,7 @@ export default function InstallationSection() {
   const trackRef = useRef<HTMLOListElement>(null);
   const [maxX, setMaxX] = useState(0);
   const [vh, setVh] = useState(800);
-  const [step, setStep] = useState(1);
+  const [active, setActive] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
@@ -38,9 +37,24 @@ export default function InstallationSection() {
   });
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
 
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setStep(Math.min(STEPS.length, Math.max(1, Math.floor(v * STEPS.length) + 1)));
-  });
+  // The card nearest the screen centre becomes the "current" (enlarged) one.
+  const updateActive = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cx = window.innerWidth / 2;
+    let best = 0;
+    let bestD = Infinity;
+    Array.from(track.children).forEach((c, i) => {
+      const r = (c as HTMLElement).getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - cx);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    });
+    setActive(best);
+  };
+  useMotionValueEvent(scrollYProgress, "change", updateActive);
 
   useEffect(() => {
     const measure = () => {
@@ -48,18 +62,19 @@ export default function InstallationSection() {
       if (!track) return;
       setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
       setVh(window.innerHeight);
+      updateActive();
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (trackRef.current) ro.observe(trackRef.current);
     window.addEventListener("resize", measure);
-    // re-measure once images have loaded (they change scrollWidth)
     const id = window.setTimeout(measure, 600);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
       window.clearTimeout(id);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -69,58 +84,55 @@ export default function InstallationSection() {
       style={{ height: `${vh + maxX}px` }}
     >
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-        {/* Heading + live step counter */}
-        <div className="mx-auto flex w-full max-w-6xl items-end justify-between px-6 pt-24 md:pt-28">
-          <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: EASE.smooth }}
-              className="font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
-            >
-              Installation
-            </motion.h2>
-            <p className="mt-3 text-ink/50">Up and running in about a minute.</p>
-          </div>
-          <div className="hidden font-display text-2xl text-ink/70 sm:block">
-            <span className="text-ink">{String(step).padStart(2, "0")}</span>
-            <span className="text-ink/30"> / {String(STEPS.length).padStart(2, "0")}</span>
-          </div>
+        {/* Heading */}
+        <div className="mx-auto w-full max-w-6xl px-6 pt-24 md:pt-28">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: EASE.smooth }}
+            className="font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
+          >
+            Installation
+          </motion.h2>
+          <p className="mt-3 text-ink/50">Up and running in about a minute.</p>
         </div>
 
-        {/* Horizontal track (slides with scroll) */}
-        <div className="flex flex-1 items-center overflow-hidden pb-10">
+        {/* Horizontal filmstrip (slides with scroll) */}
+        <div className="flex flex-1 items-center overflow-hidden pb-8">
           <motion.ol
             ref={trackRef}
             style={{ x }}
-            className="flex items-center gap-6 pl-6 pr-[16vw] md:gap-12 md:pl-[8vw]"
+            className="flex items-center gap-8 px-[16vw] md:gap-16 md:px-[38vw]"
           >
-            {STEPS.map((s, i) => (
-              <li key={i} className="shrink-0">
-                <div className="w-[70vw] max-w-[380px] md:w-[46vh] md:max-w-[460px]">
-                  <div
-                    className="overflow-hidden rounded-2xl border border-ink/10 bg-white"
-                    style={{ boxShadow: "0 30px 70px -35px rgba(0,0,0,0.4)" }}
+            {STEPS.map((s, i) => {
+              const on = i === active;
+              return (
+                <li key={i} className="shrink-0">
+                  <motion.div
+                    animate={{ scale: on ? 1 : 0.74, opacity: on ? 1 : 0.55 }}
+                    transition={{ duration: 0.5, ease: EASE.smooth }}
+                    className="flex origin-center flex-col items-center"
                   >
                     <img
                       src={s.img}
                       alt={`Step ${i + 1}: ${s.caption}`}
                       draggable={false}
-                      className="block aspect-square w-full object-cover"
+                      className="block h-auto max-h-[42vh] w-auto max-w-[68vw] rounded-xl md:max-h-[50vh] md:max-w-[44vw]"
+                      style={{ boxShadow: "0 24px 60px -30px rgba(0,0,0,0.45)" }}
                     />
-                  </div>
-                  <div className="mt-4 flex items-start gap-3">
-                    <span className="font-display text-2xl leading-none text-ink/25">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p className="text-[14px] leading-relaxed text-ink/70 md:text-[15px]">
-                      {s.caption}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
+                    <div className="mt-5 flex items-center gap-2.5">
+                      <span className="font-display text-xl leading-none text-ink/30">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <p className="text-center text-[14px] leading-snug text-ink/70 md:text-[15px]">
+                        {s.caption}
+                      </p>
+                    </div>
+                  </motion.div>
+                </li>
+              );
+            })}
           </motion.ol>
         </div>
       </div>
