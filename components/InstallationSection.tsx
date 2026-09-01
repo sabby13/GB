@@ -37,10 +37,26 @@ export default function InstallationSection() {
   });
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
 
-  // The step in focus tracks scroll progress (0 → first, 1 → last).
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setActive(Math.round(v * (STEPS.length - 1)));
-  });
+  // Layout centre of each card (unaffected by the translate/scale transforms).
+  const centers = useRef<number[]>([]);
+
+  // The focused step is whichever card is actually nearest the screen centre.
+  const computeActive = (val: number) => {
+    const cs = centers.current;
+    if (!cs.length) return;
+    const target = window.innerWidth / 2 - val;
+    let best = 0;
+    let bd = Infinity;
+    cs.forEach((c, i) => {
+      const d = Math.abs(c - target);
+      if (d < bd) {
+        bd = d;
+        best = i;
+      }
+    });
+    setActive(best);
+  };
+  useMotionValueEvent(x, "change", computeActive);
 
   useEffect(() => {
     const measure = () => {
@@ -48,6 +64,11 @@ export default function InstallationSection() {
       if (!track) return;
       setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
       setVh(window.innerHeight);
+      centers.current = Array.from(track.children).map((c) => {
+        const el = c as HTMLElement;
+        return el.offsetLeft + el.offsetWidth / 2;
+      });
+      computeActive(x.get());
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -88,7 +109,7 @@ export default function InstallationSection() {
           <motion.ol
             ref={trackRef}
             style={{ x }}
-            className="flex items-center gap-8 px-[16vw] md:gap-16 md:px-[38vw]"
+            className="flex items-center gap-[26vw] px-[18vw] md:gap-[17vw] md:px-[26vw]"
           >
             {STEPS.map((s, i) => {
               const on = i === active;
