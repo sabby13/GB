@@ -90,49 +90,38 @@ export default function InstallationSection() {
         </div>
 
         {/* Horizontal track (slides with scroll) */}
-        <div className="flex flex-1 items-center overflow-hidden">
+        <div className="flex flex-1 items-center overflow-hidden pb-10">
           <motion.ol
             ref={trackRef}
             style={{ x }}
-            className="flex items-center gap-6 pl-6 pr-[12vw] md:gap-12 md:pl-[8vw]"
+            className="flex items-center gap-6 pl-6 pr-[16vw] md:gap-12 md:pl-[8vw]"
           >
             {STEPS.map((s, i) => (
-              <li
-                key={i}
-                className="w-[78vw] max-w-[440px] shrink-0 md:w-[38vw] md:max-w-[520px]"
-              >
-                <div
-                  className="overflow-hidden rounded-2xl border border-ink/10 bg-white"
-                  style={{ boxShadow: "0 30px 70px -35px rgba(0,0,0,0.4)" }}
-                >
-                  <img
-                    src={s.img}
-                    alt={`Step ${i + 1}: ${s.caption}`}
-                    draggable={false}
-                    className="block aspect-square w-full object-cover"
-                  />
-                </div>
-                <div className="mt-5 flex items-start gap-4">
-                  <span className="font-display text-3xl leading-none text-ink/25">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="max-w-sm text-[15px] leading-relaxed text-ink/70 md:text-base">
-                    {s.caption}
-                  </p>
+              <li key={i} className="shrink-0">
+                <div className="w-[70vw] max-w-[380px] md:w-[46vh] md:max-w-[460px]">
+                  <div
+                    className="overflow-hidden rounded-2xl border border-ink/10 bg-white"
+                    style={{ boxShadow: "0 30px 70px -35px rgba(0,0,0,0.4)" }}
+                  >
+                    <img
+                      src={s.img}
+                      alt={`Step ${i + 1}: ${s.caption}`}
+                      draggable={false}
+                      className="block aspect-square w-full object-cover"
+                    />
+                  </div>
+                  <div className="mt-4 flex items-start gap-3">
+                    <span className="font-display text-2xl leading-none text-ink/25">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-[14px] leading-relaxed text-ink/70 md:text-[15px]">
+                      {s.caption}
+                    </p>
+                  </div>
                 </div>
               </li>
             ))}
           </motion.ol>
-        </div>
-
-        {/* Progress bar */}
-        <div className="mx-auto w-full max-w-6xl px-6 pb-10">
-          <div className="h-px w-full bg-ink/10">
-            <motion.div
-              className="h-px origin-left bg-ink"
-              style={{ scaleX: scrollYProgress }}
-            />
-          </div>
         </div>
       </div>
     </section>
