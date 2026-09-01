@@ -1,151 +1,139 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import { getGsap } from "@/lib/gsap";
-import { EASE, riseIn, stagger } from "@/lib/motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { EASE } from "@/lib/motion";
 
-type Step = { title: string; caption: string; icon: React.ReactNode };
+type Step = { img: string; caption: string };
 
+// Captions lightly reworded for clarity; images live in /assets/Installtion.
 const STEPS: Step[] = [
-  {
-    title: "Download",
-    caption: "Grab the free installer — a few megabytes, no account.",
-    icon: (
-      <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
-    ),
-  },
-  {
-    title: "Install",
-    caption: "A quick, native Windows setup. No bloat, no drivers.",
-    icon: (
-      <path d="M4 7h16M4 12h16M4 17h10M20 15l2 2-2 2" />
-    ),
-  },
-  {
-    title: "Choose wallpaper",
-    caption: "Pick a living wallpaper and make it yours.",
-    icon: (
-      <path d="M4 5h16v11H4z M4 20h16 M9 16l3-4 2 2 3-4" />
-    ),
-  },
-  {
-    title: "Done",
-    caption: "Something beautiful is now living on your screen.",
-    icon: <path d="M5 13l4 4L19 7" />,
-  },
+  { img: "/assets/Installtion/1.png", caption: "Download the .zip and extract it to a folder." },
+  { img: "/assets/Installtion/2.png", caption: "Open the extracted GlassButterfly folder." },
+  { img: "/assets/Installtion/3.png", caption: "Right-click GlassButterfly.scr." },
+  { img: "/assets/Installtion/4.png", caption: "Choose Install." },
+  { img: "/assets/Installtion/5.png", caption: "Windows shows a warning — click More info." },
+  { img: "/assets/Installtion/6.png", caption: "Click Run anyway." },
+  { img: "/assets/Installtion/7.png", caption: "Open the Settings panel." },
+  { img: "/assets/Installtion/8.png", caption: "Tweak what you like, then Exit." },
+  { img: "/assets/Installtion/9.png", caption: "Click Preview to see it live." },
+  { img: "/assets/Installtion/10.png", caption: "Click OK. Reopen anytime via “Screen Saver Settings” in Windows search." },
 ];
 
-/**
- * A vertical, cinematic installation flow. A progress line scrubs with scroll
- * (GSAP ScrollTrigger) while each step rises into view (Framer Motion).
- */
 export default function InstallationSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
+  const [maxX, setMaxX] = useState(0);
+  const [vh, setVh] = useState(800);
+  const [step, setStep] = useState(1);
+
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start start", "end end"],
+  });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setStep(Math.min(STEPS.length, Math.max(1, Math.floor(v * STEPS.length) + 1)));
+  });
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      if (lineRef.current) lineRef.current.style.transform = "scaleY(1)";
-      return;
-    }
-    const { gsap, ScrollTrigger } = getGsap();
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        lineRef.current,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 60%",
-            end: "bottom 70%",
-            scrub: true,
-          },
-        }
-      );
-    }, sectionRef);
-
-    // Keep triggers accurate after fonts/layout settle.
-    const refresh = () => ScrollTrigger.refresh();
-    const id = window.setTimeout(refresh, 400);
-
+    const measure = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
+      setVh(window.innerHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+    // re-measure once images have loaded (they change scrollWidth)
+    const id = window.setTimeout(measure, 600);
     return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
       window.clearTimeout(id);
-      ctx.revert();
     };
   }, []);
 
   return (
     <section
-      ref={sectionRef}
-      className="relative w-full bg-white px-6 py-40"
+      ref={wrapRef}
+      className="relative w-full bg-white"
+      style={{ height: `${vh + maxX}px` }}
     >
-      <motion.h2
-        variants={riseIn}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.6 }}
-        className="mx-auto mb-24 max-w-5xl font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
-      >
-        Installation
-      </motion.h2>
-
-      <div className="relative mx-auto max-w-2xl">
-        {/* Track + scrubbing progress line */}
-        <div className="absolute left-[27px] top-2 bottom-2 w-px bg-ink/10 md:left-[31px]" />
-        <div
-          ref={lineRef}
-          className="absolute left-[27px] top-2 bottom-2 w-px origin-top bg-ink md:left-[31px]"
-          style={{ transform: "scaleY(0)" }}
-        />
-
-        <motion.ol
-          variants={stagger(0.2)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="flex flex-col gap-16"
-        >
-          {STEPS.map((step, i) => (
-            <motion.li
-              key={step.title}
-              variants={{
-                hidden: { opacity: 0, y: 40 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { duration: 0.9, ease: EASE.smooth },
-                },
-              }}
-              className="relative flex items-start gap-7 pl-1"
+      <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
+        {/* Heading + live step counter */}
+        <div className="mx-auto flex w-full max-w-6xl items-end justify-between px-6 pt-24 md:pt-28">
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, ease: EASE.smooth }}
+              className="font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-none text-ink"
             >
-              <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-white shadow-sm">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-ink"
+              Installation
+            </motion.h2>
+            <p className="mt-3 text-ink/50">Up and running in about a minute.</p>
+          </div>
+          <div className="hidden font-display text-2xl text-ink/70 sm:block">
+            <span className="text-ink">{String(step).padStart(2, "0")}</span>
+            <span className="text-ink/30"> / {String(STEPS.length).padStart(2, "0")}</span>
+          </div>
+        </div>
+
+        {/* Horizontal track (slides with scroll) */}
+        <div className="flex flex-1 items-center overflow-hidden">
+          <motion.ol
+            ref={trackRef}
+            style={{ x }}
+            className="flex items-center gap-6 pl-6 pr-[12vw] md:gap-12 md:pl-[8vw]"
+          >
+            {STEPS.map((s, i) => (
+              <li
+                key={i}
+                className="w-[78vw] max-w-[440px] shrink-0 md:w-[38vw] md:max-w-[520px]"
+              >
+                <div
+                  className="overflow-hidden rounded-2xl border border-ink/10 bg-white"
+                  style={{ boxShadow: "0 30px 70px -35px rgba(0,0,0,0.4)" }}
                 >
-                  {step.icon}
-                </svg>
-              </span>
-              <div className="pt-2">
-                <span className="mb-1 block text-xs uppercase tracking-[0.3em] text-ink/40">
-                  Step {i + 1}
-                </span>
-                <h3 className="font-display text-3xl text-ink">{step.title}</h3>
-                <p className="mt-2 max-w-md text-ink/55">{step.caption}</p>
-              </div>
-            </motion.li>
-          ))}
-        </motion.ol>
+                  <img
+                    src={s.img}
+                    alt={`Step ${i + 1}: ${s.caption}`}
+                    draggable={false}
+                    className="block aspect-square w-full object-cover"
+                  />
+                </div>
+                <div className="mt-5 flex items-start gap-4">
+                  <span className="font-display text-3xl leading-none text-ink/25">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="max-w-sm text-[15px] leading-relaxed text-ink/70 md:text-base">
+                    {s.caption}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </motion.ol>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mx-auto w-full max-w-6xl px-6 pb-10">
+          <div className="h-px w-full bg-ink/10">
+            <motion.div
+              className="h-px origin-left bg-ink"
+              style={{ scaleX: scrollYProgress }}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
