@@ -37,24 +37,10 @@ export default function InstallationSection() {
   });
   const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
 
-  // The card nearest the screen centre becomes the "current" (enlarged) one.
-  const updateActive = () => {
-    const track = trackRef.current;
-    if (!track) return;
-    const cx = window.innerWidth / 2;
-    let best = 0;
-    let bestD = Infinity;
-    Array.from(track.children).forEach((c, i) => {
-      const r = (c as HTMLElement).getBoundingClientRect();
-      const d = Math.abs(r.left + r.width / 2 - cx);
-      if (d < bestD) {
-        bestD = d;
-        best = i;
-      }
-    });
-    setActive(best);
-  };
-  useMotionValueEvent(scrollYProgress, "change", updateActive);
+  // The step in focus tracks scroll progress (0 → first, 1 → last).
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActive(Math.round(v * (STEPS.length - 1)));
+  });
 
   useEffect(() => {
     const measure = () => {
@@ -62,7 +48,6 @@ export default function InstallationSection() {
       if (!track) return;
       setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
       setVh(window.innerHeight);
-      updateActive();
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -110,18 +95,29 @@ export default function InstallationSection() {
               return (
                 <li key={i} className="shrink-0">
                   <motion.div
-                    animate={{ scale: on ? 1 : 0.74, opacity: on ? 1 : 0.55 }}
+                    animate={{ scale: on ? 1 : 0.78 }}
                     transition={{ duration: 0.5, ease: EASE.smooth }}
                     className="flex origin-center flex-col items-center"
                   >
-                    <img
-                      src={s.img}
-                      alt={`Step ${i + 1}: ${s.caption}`}
-                      draggable={false}
-                      className="block h-auto max-h-[42vh] w-auto max-w-[68vw] rounded-xl md:max-h-[50vh] md:max-w-[44vw]"
-                      style={{ boxShadow: "0 24px 60px -30px rgba(0,0,0,0.45)" }}
-                    />
-                    <div className="mt-5 flex items-center gap-2.5">
+                    <div className="relative">
+                      <img
+                        src={s.img}
+                        alt={`Step ${i + 1}: ${s.caption}`}
+                        draggable={false}
+                        className="block h-auto max-h-[50vh] w-auto max-w-[82vw] rounded-xl md:max-h-[62vh] md:max-w-[54vw]"
+                        style={{ boxShadow: "0 24px 60px -30px rgba(0,0,0,0.45)" }}
+                      />
+                      {/* Non-focused steps darken toward black */}
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 rounded-xl bg-black transition-opacity duration-500"
+                        style={{ opacity: on ? 0 : 0.62 }}
+                      />
+                    </div>
+                    <div
+                      className="mt-5 flex items-center gap-2.5 transition-opacity duration-500"
+                      style={{ opacity: on ? 1 : 0.4 }}
+                    >
                       <span className="font-display text-xl leading-none text-ink/30">
                         {String(i + 1).padStart(2, "0")}
                       </span>
