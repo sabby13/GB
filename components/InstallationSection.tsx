@@ -31,7 +31,7 @@ const LAST = SLIDES.length - 1;
 export default function InstallationSection() {
   const wrapRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
-  const [maxX, setMaxX] = useState(0);
+  const [range, setRange] = useState({ start: 0, end: 0, travel: 0 });
   const [vh, setVh] = useState(800);
   const [active, setActive] = useState(0);
 
@@ -39,7 +39,9 @@ export default function InstallationSection() {
     target: wrapRef,
     offset: ["start start", "end end"],
   });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -maxX]);
+  // Move from "first card centred" to "last card centred" — so every step,
+  // including the welcome finale, lands dead-centre regardless of its width.
+  const x = useTransform(scrollYProgress, [0, 1], [range.start, range.end]);
 
   // Layout centre of each card (unaffected by the translate/scale transforms).
   const centers = useRef<number[]>([]);
@@ -66,12 +68,16 @@ export default function InstallationSection() {
     const measure = () => {
       const track = trackRef.current;
       if (!track) return;
-      setMaxX(Math.max(0, track.scrollWidth - window.innerWidth));
       setVh(window.innerHeight);
-      centers.current = Array.from(track.children).map((c) => {
+      const cs = Array.from(track.children).map((c) => {
         const el = c as HTMLElement;
         return el.offsetLeft + el.offsetWidth / 2;
       });
+      centers.current = cs;
+      const half = window.innerWidth / 2;
+      const start = half - cs[0];
+      const end = half - cs[cs.length - 1];
+      setRange({ start, end, travel: Math.max(0, start - end) });
       computeActive(x.get());
     };
     measure();
@@ -91,7 +97,7 @@ export default function InstallationSection() {
     <section
       ref={wrapRef}
       className="relative w-full bg-white"
-      style={{ height: `${vh + maxX}px` }}
+      style={{ height: `${vh + range.travel}px` }}
     >
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
         {/* Heading — disappears once the welcome finale is reached */}
@@ -121,7 +127,7 @@ export default function InstallationSection() {
           <motion.ol
             ref={trackRef}
             style={{ x }}
-            className="flex items-center gap-[26vw] px-[18vw] md:gap-[17vw] md:px-[26vw]"
+            className="flex items-center gap-[30vw] px-[8vw] md:gap-[22vw] md:px-[10vw]"
           >
             {SLIDES.map((s, i) => {
               const on = i === active;
