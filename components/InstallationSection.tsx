@@ -143,7 +143,7 @@ export default function InstallationSection() {
                         src={s.img}
                         alt="That’s it. Welcome to GlassButterfly."
                         draggable={false}
-                        className="block h-auto w-auto max-h-[46vh] max-w-[88vw] md:max-h-[52vh] md:max-w-[66vw]"
+                        className="block h-auto w-auto max-h-[74vh] max-w-[98vw] md:max-h-[88vh] md:max-w-[94vw]"
                       />
                     </motion.div>
                   </li>
