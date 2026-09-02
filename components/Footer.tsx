@@ -35,7 +35,7 @@ export default function Footer() {
             Stay close
           </h2>
           <p className="mt-4 font-display text-[clamp(1.5rem,4vw,2.25rem)] leading-tight text-ink/90">
-            We&apos;re building more beautiful software.
+            Building more beautiful software.
           </p>
 
           {/* E-mail capture — the CTA disappears once you're in */}

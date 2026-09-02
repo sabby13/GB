@@ -9,9 +9,9 @@ import {
 } from "framer-motion";
 import { EASE } from "@/lib/motion";
 
-type Step = { img: string; caption: string };
+type Slide = { img: string; caption?: string; finale?: boolean };
 
-const STEPS: Step[] = [
+const STEPS: Slide[] = [
   { img: "/assets/Installtion/1.png", caption: "Download the .zip and extract it to a folder." },
   { img: "/assets/Installtion/2.png", caption: "Open the extracted GlassButterfly folder." },
   { img: "/assets/Installtion/3.png", caption: "Right-click GlassButterfly.scr." },
@@ -23,6 +23,10 @@ const STEPS: Step[] = [
   { img: "/assets/Installtion/9.png", caption: "Click Preview to see it live." },
   { img: "/assets/Installtion/10.png", caption: "Click OK. Reopen anytime via “Screen Saver Settings” in Windows search." },
 ];
+
+// The finale slides in last, like the rest.
+const SLIDES: Slide[] = [...STEPS, { img: "/assets/welcome.png", finale: true }];
+const LAST = SLIDES.length - 1;
 
 export default function InstallationSection() {
   const wrapRef = useRef<HTMLElement>(null);
@@ -90,8 +94,11 @@ export default function InstallationSection() {
       style={{ height: `${vh + maxX}px` }}
     >
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-        {/* Heading */}
-        <div className="mx-auto w-full max-w-6xl px-6 pt-24 md:pt-28">
+        {/* Heading — disappears once the welcome finale is reached */}
+        <div
+          className="mx-auto w-full max-w-6xl px-6 pt-24 transition-opacity duration-500 md:pt-28"
+          style={{ opacity: active === LAST ? 0 : 1 }}
+        >
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -101,7 +108,12 @@ export default function InstallationSection() {
           >
             Installation
           </motion.h2>
-          <p className="mt-3 text-ink/50">Up and running in about a minute.</p>
+          <p
+            className="mt-3 text-ink/50 transition-opacity duration-500"
+            style={{ opacity: active === 0 ? 1 : 0 }}
+          >
+            Up and running in about a minute.
+          </p>
         </div>
 
         {/* Horizontal filmstrip (slides with scroll) */}
@@ -111,8 +123,26 @@ export default function InstallationSection() {
             style={{ x }}
             className="flex items-center gap-[26vw] px-[18vw] md:gap-[17vw] md:px-[26vw]"
           >
-            {STEPS.map((s, i) => {
+            {SLIDES.map((s, i) => {
               const on = i === active;
+              if (s.finale) {
+                return (
+                  <li key={i} className="shrink-0">
+                    <motion.div
+                      animate={{ scale: on ? 1 : 0.78 }}
+                      transition={{ duration: 0.5, ease: EASE.smooth }}
+                      className="flex origin-center items-center justify-center"
+                    >
+                      <img
+                        src={s.img}
+                        alt="That’s it. Welcome to GlassButterfly."
+                        draggable={false}
+                        className="block h-auto w-auto max-h-[46vh] max-w-[88vw] md:max-h-[52vh] md:max-w-[66vw]"
+                      />
+                    </motion.div>
+                  </li>
+                );
+              }
               return (
                 <li key={i} className="shrink-0">
                   <motion.div
