@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import VisitorTracker from "@/components/VisitorTracker";
 
 export const metadata: Metadata = {
   title: "GlassButterfly",
@@ -30,6 +31,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <VisitorTracker />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

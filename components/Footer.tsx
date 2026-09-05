@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StaticButterfly from "./StaticButterfly";
 import { EASE } from "@/lib/motion";
+import { trackWaitlist } from "@/lib/analytics";
 
 /**
  * Closing "Stay close" newsletter footer — an editorial sign-off with a serif
@@ -42,7 +43,11 @@ export default function Footer() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (email.trim()) setJoined(true);
+              if (email.trim()) {
+                // Fire-and-forget; duplicates resolve to the same success.
+                void trackWaitlist(email);
+                setJoined(true);
+              }
             }}
             className="mx-auto mt-9 flex max-w-sm flex-col items-center gap-5"
           >

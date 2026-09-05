@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import { EASE, stagger, wordReveal } from "@/lib/motion";
+import { APP_VERSION } from "@/lib/version";
+import { trackDownload } from "@/lib/analytics";
 
 // Set this to your installer URL (e.g. a GitHub release asset) when ready.
 const DOWNLOAD_URL = "";
-const VERSION = "1.6.1";
+const VERSION = APP_VERSION;
 
 const QUOTE = "~ let something Beautiful live on your Screen ~".split(" ");
 
@@ -68,6 +70,8 @@ export default function DownloadSection() {
           <a
             href={DOWNLOAD_URL || "#"}
             onClick={(e) => {
+              // Fire-and-forget — never blocks the download.
+              void trackDownload(APP_VERSION, "website");
               if (!DOWNLOAD_URL) e.preventDefault();
             }}
             className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-ink px-8 py-4 text-white transition-transform duration-300 hover:scale-[1.02]"
