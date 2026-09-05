@@ -75,6 +75,15 @@ body {
   font-family: "FC Magic", "Permanent Marker", "Comic Sans MS", cursive;
 }
 
+/* Swipeable strip with no visible scrollbar (mobile installation carousel). */
+.gb-noscroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.gb-noscroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* A soft glass surface used by callouts and arrow buttons */
 .glass {
   background: rgba(255, 255, 255, 0.55);
