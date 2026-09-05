@@ -34,6 +34,9 @@ export default function InstallationSection() {
   const [range, setRange] = useState({ start: 0, end: 0, travel: 0 });
   const [vh, setVh] = useState(800);
   const [active, setActive] = useState(0);
+  // Mobile swipe hint: shown on step 1 until the cards are first moved.
+  // In-memory only, so it naturally reappears on a fresh page load.
+  const [swiped, setSwiped] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
@@ -63,6 +66,13 @@ export default function InstallationSection() {
     setActive(best);
   };
   useMotionValueEvent(x, "change", computeActive);
+
+  // Dismiss the swipe hint once the user scrolls the cards along. Guarded on a
+  // measured section (travel > 0), since before layout the scroll range is
+  // degenerate and progress reads ~1.
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    if (!swiped && range.travel > 0 && p > 0.015) setSwiped(true);
+  });
 
   useEffect(() => {
     const measure = () => {
@@ -171,6 +181,31 @@ export default function InstallationSection() {
                         style={{ opacity: on ? 0 : 0.62 }}
                       />
                     </div>
+
+                    {/* Mobile-only swipe hint on the first step */}
+                    {i === 0 && !swiped && (
+                      <div
+                        aria-hidden="true"
+                        className="mt-4 flex select-none items-center justify-center gap-2.5 font-sans text-[11px] uppercase tracking-[0.28em] text-ink/55 md:hidden"
+                      >
+                        <motion.span
+                          animate={{ x: [0, -4, 0] }}
+                          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                          className="inline-block"
+                        >
+                          ←
+                        </motion.span>
+                        <span>Swipe</span>
+                        <motion.span
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                          className="inline-block"
+                        >
+                          →
+                        </motion.span>
+                      </div>
+                    )}
+
                     <div
                       className="mt-5 flex items-center gap-2.5 transition-opacity duration-500"
                       style={{ opacity: on ? 1 : 0.4 }}
