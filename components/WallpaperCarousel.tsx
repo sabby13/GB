@@ -19,7 +19,13 @@ const ScreenSaverOverlay = dynamic(
  * never remounts — so switching wallpapers feels seamless, exactly like the
  * real screensaver changing its background.
  */
-export default function WallpaperCarousel() {
+export default function WallpaperCarousel({
+  arrowBoost = 1,
+}: {
+  /** Counter-scale for the arrows so they stay tappable when the whole monitor
+   *  is scaled down on small screens (1 on desktop). */
+  arrowBoost?: number;
+}) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const screenRef = useRef<HTMLDivElement>(null);
@@ -96,8 +102,8 @@ export default function WallpaperCarousel() {
       />
 
       {/* Arrows */}
-      <CarouselArrow side="left" onClick={() => go(-1)} />
-      <CarouselArrow side="right" onClick={() => go(1)} />
+      <CarouselArrow side="left" onClick={() => go(-1)} boost={arrowBoost} />
+      <CarouselArrow side="right" onClick={() => go(1)} boost={arrowBoost} />
 
       {/* Dots */}
       <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2">
@@ -125,23 +131,30 @@ export default function WallpaperCarousel() {
 function CarouselArrow({
   side,
   onClick,
+  boost = 1,
 }: {
   side: "left" | "right";
   onClick: () => void;
+  boost?: number;
 }) {
   return (
     <button
       onClick={onClick}
       aria-label={side === "left" ? "Previous wallpaper" : "Next wallpaper"}
-      className="glass group absolute top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
-      style={{ [side]: "12px" } as React.CSSProperties}
+      className="glass group absolute top-1/2 z-10 flex h-11 w-11 items-center justify-center rounded-full"
+      style={{
+        [side]: "12px",
+        // Anchor to the screen edge and grow inward as it counter-scales.
+        transformOrigin: side === "left" ? "left center" : "right center",
+        transform: `translateY(-50%) scale(${boost})`,
+      }}
     >
       <svg
         width="16"
         height="16"
         viewBox="0 0 24 24"
         fill="none"
-        className="text-ink"
+        className="text-ink transition-transform duration-300 group-hover:scale-110"
         style={{ transform: side === "left" ? "rotate(180deg)" : "none" }}
       >
         <path

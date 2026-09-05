@@ -93,7 +93,9 @@ export default function MonitorShowcase() {
                     "0 0 0 1px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.4) inset",
                 }}
               >
-                <WallpaperCarousel />
+                <WallpaperCarousel
+                  arrowBoost={Math.min(1 / Math.max(fit.scale, 0.28), 2.6)}
+                />
                 {/* Glass reflection across the whole panel */}
                 <div
                   className="pointer-events-none absolute inset-0 z-[15] rounded-[8px]"
